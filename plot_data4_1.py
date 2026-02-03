@@ -2,12 +2,24 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt
 
+mt = True
+
+if mt:
+    filename= "energies_raw.txt"
+    lines = 'quartz_mt_(\d+)\.out'
+else:
+    filename = "energies_raw_.txt"
+    lines = 'quartz_us_(\d+)\.out'
+
+
+
 data = []
 
-with open("energies_raw.txt", "r") as f:
+
+with open(filename, "r") as f:
     for line in f:
         # Extract ECUT from filename
-        ecut = int(re.search(r'quartz_mt_(\d+)\.out', line).group(1))
+        ecut = int(re.search(lines, line).group(1))
         # Extract total energy
         energy = float(re.search(r'=\s*(-?\d+\.\d+)', line).group(1))
         data.append([ecut, energy])
@@ -25,10 +37,13 @@ E_ref = df["energy_Ry"].iloc[-1]
 df["deltaE_meV"] = (df["energy_Ry"] - E_ref) * 13.605693 * 1000
 
 # Plot
+#make the y axis logarithmic
+#add lines at 1 meV and 10 meV
 plt.figure()
 plt.plot(df["ecut_Ry"], df["deltaE_meV"], marker='o')
-plt.axhline(1, linestyle='--', label="1 meV")
-plt.axhline(10, linestyle='--', label="10 meV")
+plt.yscale("log")
+plt.axhline(1, linestyle='--', label="1 meV" , c='r')
+plt.axhline(10, linestyle='--', label="10 meV" , c='purple')
 plt.xlabel("Plane-wave cutoff (Ry)")
 plt.ylabel("ΔE (meV per SiO₂)")
 plt.title("Quartz energy convergence (MT PP)")
