@@ -7,9 +7,11 @@ mt = True
 if mt:
     filename= "energies_raw.txt"
     lines = 'quartz_mt_(\d+)\.out'
+    title = "martins-troullier"
 else:
-    filename = "energies_raw_.txt"
+    filename = "energies_raw_us.txt"
     lines = 'quartz_us_(\d+)\.out'
+    title = "ultra soft"
 
 
 
@@ -45,8 +47,8 @@ plt.yscale("log")
 plt.axhline(1, linestyle='--', label="1 meV" , c='r')
 plt.axhline(10, linestyle='--', label="10 meV" , c='purple')
 plt.xlabel("Plane-wave cutoff (Ry)")
-plt.ylabel("ΔE (meV per SiO₂)")
-plt.title("Quartz energy convergence (MT PP)")
+plt.ylabel("Relative energy difference (meV)")
+plt.title(f"Quartz (SiO2) energy convergence potential : {title}")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
