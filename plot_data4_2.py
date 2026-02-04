@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import matplotlib.pyplot as plt
+import numpy as np 
 
 alpha = True
 
@@ -53,10 +54,14 @@ E_ref_beta = df_beta["energy_Ry"].iloc[-1]
 df["deltaE_meV"] = (df["energy_Ry"] - E_ref) * 13.605693 * 1000
 df_beta["deltaE_meV"] = (df_beta["energy_Ry"] - E_ref_beta) * 13.605693 * 1000
 
-def diff(Ry,alpha,beta):
-    diffence = alpha - beta 
+DFs = np.abs(df["energy_Ry"] - df_beta["energy_Ry"])
+final_diff = (DFs - (np.min(DFs)))* 13.605693 * 1000
 
-    plt.plot(Ry,diffence, marker='o')
+
+def diff(Ry,DFs):
+
+
+    plt.plot(Ry,DFs, marker='o')
     plt.yscale("log")
     plt.axhline(1, linestyle='--', label="1 meV" , c='r')
     #plt.axhline(10, linestyle='--', label="10 meV" , c='purple')
@@ -68,7 +73,7 @@ def diff(Ry,alpha,beta):
     plt.tight_layout()
     plt.show()
 #plots the differnece graph 
-diff(df["ecut_Ry"],df["deltaE_meV"],df_beta["deltaE_meV"])
+diff(df["ecut_Ry"],final_diff)
 # Plot
 #make the y axis logarithmic
 #add lines at 1 meV and 10 meV
