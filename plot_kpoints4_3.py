@@ -6,7 +6,7 @@ import numpy as np
 # -------------------------
 k_data = []
 
-with open("kpoints_total2.txt") as f:
+with open("kpoints_totaltin.txt") as f:
     for line in f:
         parts = line.split()
         idx = int(parts[0].split("__")[1].split(".")[0])
@@ -20,7 +20,7 @@ df_k = pd.DataFrame(k_data, columns=["idx", "kpoints"])
 # -------------------------
 e_data = []
 
-with open("energy_total.txt") as f:
+with open("energy_total_tin.txt") as f:
     for line in f:
         parts = line.split()
         idx = int(parts[0].split("__")[1].split(".")[0])
@@ -57,7 +57,7 @@ plt.axhline(1, linestyle="--", color="r", label="1 meV")
 
 plt.xlabel("Number of k-points")
 plt.ylabel("Relative energy difference (meV)")
-plt.title("Quartz (SiO₂) k-point convergence")
+plt.title("Alpha-Tin k-point convergence")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -68,9 +68,8 @@ plt.plot(x, df["kpoints"], marker="o", c = "r", label="k points")
 plt.plot(x,x**3, linestyle="--", label="cubic scaling", c="b")
 plt.xlabel("Number of k-points")
 plt.ylabel("K points")
-plt.title("Quartz (SiO₂) k-point convergence")
+plt.title("Alpha-Tin k-point convergence")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
-
