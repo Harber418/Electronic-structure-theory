@@ -53,8 +53,22 @@ E_ref_beta = df_beta["energy_Ry"].iloc[-1]
 df["deltaE_meV"] = (df["energy_Ry"] - E_ref) * 13.605693 * 1000
 df_beta["deltaE_meV"] = (df_beta["energy_Ry"] - E_ref_beta) * 13.605693 * 1000
 
-differnece = E_ref_beta - E_ref
+def diff(Ry,alpha,beta):
+    diffence = alpha - beta 
 
+    plt.plot(Ry,diffence, marker='o')
+    plt.yscale("log")
+    plt.axhline(1, linestyle='--', label="1 meV" , c='r')
+    #plt.axhline(10, linestyle='--', label="10 meV" , c='purple')
+    plt.xlabel("Plane-wave cutoff (Ry)")
+    plt.ylabel("Relative energy difference (meV)")
+    plt.title(f" energy difference for alpha and bata tin ")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+#plots the differnece graph 
+diff(df["ecut_Ry"],df["deltaE_meV"],df_beta["deltaE_meV"])
 # Plot
 #make the y axis logarithmic
 #add lines at 1 meV and 10 meV
@@ -70,4 +84,6 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+
 
