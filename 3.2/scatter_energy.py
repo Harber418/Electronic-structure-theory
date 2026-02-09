@@ -22,7 +22,6 @@ def vinet_eos(v,v0,b0,b0prime,e0):
 
 def fit(equ,energy,volume):
     
-    #mask = (volume > 900) & (volume < 1150)
 
     v = volume
     e = energy
