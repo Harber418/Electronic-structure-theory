@@ -32,7 +32,7 @@ def fit(equ,energy,volume):
     #here we have the energy and volume of our initla sample 
     #in units of angstroms and Ry
     trial_v = (543.09*10**(-2))**3
-    trial_v = 20
+
 
     #energy_trial = -19.19270380*13.605693 * 1.60218e-19
     #here is is in Ry
@@ -151,7 +151,8 @@ def main():
 
     #turn to angstroms
     df["a_A"] = df["a"] * 0.529177
-    df["volume_A"] = (df["a_A"] **3)/8
+    df["volume_A"] = (df["a_A"] **3)
+
     #turn energy to j 
     #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
 
