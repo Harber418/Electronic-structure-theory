@@ -55,7 +55,7 @@ def fit(equ,energy,volume):
 
     v0, b0, b0p, e0 = popt
 
-
+    print(f"paramertas for equation {equ}")
     print(f"E0  = {e0:.6f} Ry")
     print(f"V0  = {v0:.3f} Å^3")
     print(f"B0  = {b0:.4f} Ry/Å^3")
@@ -114,12 +114,12 @@ def main():
     plt.figure()
     plt.scatter(df["volume_A"], df["energy_Ry"], s=25)
     plt.xlabel("Volume (Å³)")
-    plt.ylabel("Total energy (J)")
+    plt.ylabel("Total energy (Ry)")
     plt.tight_layout()
     plt.show()
     #fit options 
     fit("murnagham_energy",df["energy_Ry"].values, df["volume_A"].values)
     fit("vinet_eos",df["energy_Ry"].values, df["volume_A"].values)
-    #fit("BM_energy",df["energy_Ry"].values, df["volume_A"].values)
+    fit("BM_energy",df["energy_Ry"].values, df["volume_A"].values)
 if __name__ == "__main__":
     main()
