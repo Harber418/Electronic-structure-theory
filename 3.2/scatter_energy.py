@@ -34,13 +34,13 @@ def fit(equ,energy,volume):
     #here we have the energy and volume of our initla sample 
     #in units of angstroms and Ry
     trial_v = (543.09*10**(-2))**3
-    V = 20*8
+
     #energy_trial = -19.19270380*13.605693 * 1.60218e-19
     #here is is in Ry
     trial_energy = -19.19270380
     #in units of angstrom
     p0 = [
-    V,         # v0
+    trial_v,         # v0
     B0,                     # b0 ~ Ry/A^3 
     4.0,                      # b0'
     trial_energy
