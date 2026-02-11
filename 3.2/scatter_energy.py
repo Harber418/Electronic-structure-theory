@@ -73,8 +73,8 @@ def fit(equ,energy,volume):
         #convert b0 back to j per m^3
         #B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)
         print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30)*10**(9))
-        print(f"{B0} in GPA")
+        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
         n = 1 / (vol_per_atom * 1e-30)
@@ -90,7 +90,8 @@ def fit(equ,energy,volume):
         print(f"the volume per atom is {vol_per_atom}")
         density = si_mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
         n = 8/vol_per_atom
@@ -106,7 +107,8 @@ def fit(equ,energy,volume):
         print(f"the volume per atom is {vol_per_atom}")
         density = si_mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
         n = 8/vol_per_atom

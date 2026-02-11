@@ -6,12 +6,12 @@ import numpy as np
 alpha = True
 
 if alpha:
-    filename= "energies_raw_alpha_tin.txt"
+    filename= "energy_total_a.txt"
     lines = 'alpha_tin_(\d+)\.out'
     title = "VAN"
     types = "alpha tin"
 else:
-    filename = "energies_raw_beta_tin.txt"
+    filename = "energy_total_b.txt"
     lines = 'beta_tin__(\d+)\.out'
     title = "VAN"
     types = "beta tin"
@@ -28,7 +28,7 @@ with open(filename, "r") as f:
         data.append([ecut, energy])
 
 data_beta = []
-with open("energies_raw_beta_tin.txt", "r") as f:
+with open("energy_total_b.txt", "r") as f:
     for line in f:
         # Extract ECUT from filename
         ecut = int(re.search('beta_tin__(\d+)\.out', line).group(1))
@@ -56,6 +56,14 @@ df_beta["deltaE_meV"] = (df_beta["energy_Ry"] - E_ref_beta) * 13.605693 * 1000
 
 DFs = np.abs(df["energy_Ry"] - df_beta["energy_Ry"])
 final_diff = (DFs - (np.min(DFs)))* 13.605693 * 1000
+#  difference at each cutoff
+delta_alpha_beta = df["energy_Ry"] - df_beta["energy_Ry"]
+
+# converged value = highest cutoff
+delta_conv = delta_alpha_beta.iloc[-1]
+
+# relative error in meV
+delta_rel_meV = np.abs(delta_alpha_beta - delta_conv) * 13.605693 * 1000
 
 
 def diff(Ry,DFs):
@@ -73,7 +81,7 @@ def diff(Ry,DFs):
     plt.tight_layout()
     plt.show()
 #plots the differnece graph 
-diff(df["ecut_Ry"],final_diff)
+diff(df["ecut_Ry"],delta_rel_meV)
 # Plot
 #make the y axis logarithmic
 #add lines at 1 meV and 10 meV
