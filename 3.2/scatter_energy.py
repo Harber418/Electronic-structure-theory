@@ -28,10 +28,10 @@ def fit(equ,energy,volume):
     #100GPa
     #now convert to Ry/A^3 from joules per m^3
     #1 10^9 Pa = 10^9 J/m^3
-    B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)
+    B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)/2
     #here we have the energy and volume of our initla sample 
     #in units of angstroms and Ry
-    trial_v = (543.09*10**(-2))**3
+    trial_v = 20*2
 
 
     #energy_trial = -19.19270380*13.605693 * 1.60218e-19
@@ -57,7 +57,7 @@ def fit(equ,energy,volume):
 
     print(f"paramertas for equation {equ}")
     print(f"E0  = {e0:.6f} Ry")
-    print(f"V0  = {v0:.4f} Å^3")
+    print(f"V0  = {v0/2:.4f} Å^3")
     print(f"B0  = {b0:.5f} Ry/Å^3")
     print(f"B0' = {b0p:.4f}")
     vfit = np.linspace(v.min(), v.max(), 500)
@@ -67,13 +67,13 @@ def fit(equ,energy,volume):
     if equ == "murnagham_energy":
         efit = murnagham_energy(vfit, v0,b0,b0p,e0)
         titles="murnagham"
-        vol_per_atom = v0/8
+        vol_per_atom = v0/2
         print(f"the volume per atom is {vol_per_atom}")
         density = si_mass/(vol_per_atom*10**(-30))
         #convert b0 back to j per m^3
         #B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)
         print(f"density is {density} in kg per m^3")
-        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
         print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
@@ -86,15 +86,15 @@ def fit(equ,energy,volume):
     elif equ == "BM_energy":
         efit = BM_energy(vfit, v0,b0,b0p,e0)
         titles="BM"
-        vol_per_atom = v0/8
+        vol_per_atom = v0/2
         print(f"the volume per atom is {vol_per_atom}")
         density = si_mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
-        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
         print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
-        n = 8/vol_per_atom
+        n = 1 / (vol_per_atom * 1e-30)
         kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
         #hbar in units j s 
         #bolzmann constant in units m^2 kg s^-2 k^-1
@@ -103,15 +103,15 @@ def fit(equ,energy,volume):
     elif equ == "vinet_eos":
         titles="vinet"
         efit = vinet_eos(vfit, v0,b0,b0p,e0)
-        vol_per_atom = v0/8
+        vol_per_atom = v0/2
         print(f"the volume per atom is {vol_per_atom}")
         density = si_mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
-        B0 = b0 *8* (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
         print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
-        n = 8/vol_per_atom
+        n = 1 / (vol_per_atom * 1e-30)
         kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
         #hbar in units j s 
         #bolzmann constant in units m^2 kg s^-2 k^-1
@@ -146,7 +146,17 @@ def main():
                 radius = int(m1.group(1)) * 0.01
                 energy = float(m2.group(1))
                 data.append([radius, energy])
+    volume = "volume_raw_us.txt"
+    patternv = r'=\s*(-?\d+\.\d+)'
+    volumes = []
+    with open(volume) as f:
+        for line in f:
+            match = re.search(r'unit-cell volume\s*=\s*([-\d.]+)', line)
+            if match:
+                volume1 = float(match.group(1))* (0.529177 ** 3)
+                volumes.append(volume1)
 
+    volumes = np.sort(np.asarray(volumes))
     df = pd.DataFrame(data, columns=["a", "energy_Ry"])
     df = df.sort_values("a").reset_index(drop=True)
 
@@ -160,14 +170,14 @@ def main():
 
 
     plt.figure()
-    plt.scatter(df["volume_A"], df["energy_Ry"], s=25)
+    plt.scatter(volumes, df["energy_Ry"], s=25)
     plt.xlabel("Volume (Å³)")
     plt.ylabel("Total energy (Ry)")
     plt.tight_layout()
     plt.show()
     #fit options 
-    fit("murnagham_energy",df["energy_Ry"].values, df["volume_A"].values)
-    fit("vinet_eos",df["energy_Ry"].values, df["volume_A"].values)
-    fit("BM_energy",df["energy_Ry"].values, df["volume_A"].values)
+    fit("murnagham_energy",df["energy_Ry"].values, volumes)
+    fit("vinet_eos",df["energy_Ry"].values, volumes)
+    fit("BM_energy",df["energy_Ry"].values, volumes)
 if __name__ == "__main__":
     main()
