@@ -1,0 +1,16 @@
+alpha_kpoint__10.out:!    total energy              =    -325.65132710 Ry
+alpha_kpoint__11.out:!    total energy              =    -325.65142477 Ry
+alpha_kpoint__12.out:!    total energy              =    -325.65148198 Ry
+alpha_kpoint__13.out:!    total energy              =    -325.65151679 Ry
+alpha_kpoint__14.out:!    total energy              =    -325.65153838 Ry
+alpha_kpoint__15.out:!    total energy              =    -325.65155234 Ry
+alpha_kpoint__16.out:!    total energy              =    -325.65156137 Ry
+alpha_kpoint__1.out:!    total energy              =    -324.48886935 Ry
+alpha_kpoint__2.out:!    total energy              =    -325.48411087 Ry
+alpha_kpoint__3.out:!    total energy              =    -325.60738026 Ry
+alpha_kpoint__4.out:!    total energy              =    -325.63640307 Ry
+alpha_kpoint__5.out:!    total energy              =    -325.64544667 Ry
+alpha_kpoint__6.out:!    total energy              =    -325.64878416 Ry
+alpha_kpoint__7.out:!    total energy              =    -325.65018195 Ry
+alpha_kpoint__8.out:!    total energy              =    -325.65082929 Ry
+alpha_kpoint__9.out:!    total energy              =    -325.65115366 Ry

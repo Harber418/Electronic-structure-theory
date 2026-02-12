@@ -1,0 +1,16 @@
+quartz_kpoint__10.out:!    total energy              =    -215.93573341 Ry
+quartz_kpoint__11.out:!    total energy              =    -215.93573341 Ry
+quartz_kpoint__12.out:!    total energy              =    -215.93573348 Ry
+quartz_kpoint__13.out:!    total energy              =    -215.93573342 Ry
+quartz_kpoint__14.out:!    total energy              =    -215.93573348 Ry
+quartz_kpoint__15.out:!    total energy              =    -215.93573348 Ry
+quartz_kpoint__16.out:!    total energy              =    -215.93573348 Ry
+quartz_kpoint__1.out:!    total energy              =    -215.89459764 Ry
+quartz_kpoint__2.out:!    total energy              =    -215.93533390 Ry
+quartz_kpoint__3.out:!    total energy              =    -215.93571803 Ry
+quartz_kpoint__4.out:!    total energy              =    -215.93573288 Ry
+quartz_kpoint__5.out:!    total energy              =    -215.93573342 Ry
+quartz_kpoint__6.out:!    total energy              =    -215.93573350 Ry
+quartz_kpoint__7.out:!    total energy              =    -215.93573341 Ry
+quartz_kpoint__8.out:!    total energy              =    -215.93573347 Ry
+quartz_kpoint__9.out:!    total energy              =    -215.93573347 Ry

@@ -1,0 +1,16 @@
+alpha_kpoint__10.out:     number of k points=    47
+alpha_kpoint__11.out:     number of k points=    56
+alpha_kpoint__12.out:     number of k points=    72
+alpha_kpoint__13.out:     number of k points=    84
+alpha_kpoint__14.out:     number of k points=   104
+alpha_kpoint__15.out:     number of k points=   120
+alpha_kpoint__16.out:     number of k points=   145
+alpha_kpoint__1.out:     number of k points=     1
+alpha_kpoint__2.out:     number of k points=     3
+alpha_kpoint__3.out:     number of k points=     4
+alpha_kpoint__4.out:     number of k points=     8
+alpha_kpoint__5.out:     number of k points=    10
+alpha_kpoint__6.out:     number of k points=    16
+alpha_kpoint__7.out:     number of k points=    20
+alpha_kpoint__8.out:     number of k points=    29
+alpha_kpoint__9.out:     number of k points=    35

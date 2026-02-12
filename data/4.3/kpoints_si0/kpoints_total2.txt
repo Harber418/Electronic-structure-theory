@@ -1,0 +1,16 @@
+quartz_kpoint__10.out:     number of k points=   116
+quartz_kpoint__11.out:     number of k points=   146
+quartz_kpoint__12.out:     number of k points=   193
+quartz_kpoint__13.out:     number of k points=   231
+quartz_kpoint__14.out:     number of k points=   288
+quartz_kpoint__15.out:     number of k points=   349
+quartz_kpoint__16.out:     number of k points=   417
+quartz_kpoint__1.out:     number of k points=     1
+quartz_kpoint__2.out:     number of k points=     4
+quartz_kpoint__3.out:     number of k points=     7
+quartz_kpoint__4.out:     number of k points=    13
+quartz_kpoint__5.out:     number of k points=    19
+quartz_kpoint__6.out:     number of k points=    34
+quartz_kpoint__7.out:     number of k points=    44
+quartz_kpoint__8.out:     number of k points=    65
+quartz_kpoint__9.out:     number of k points=    88

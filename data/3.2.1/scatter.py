@@ -175,11 +175,9 @@ def main():
     plt.show()
     #fit options 
     fit("murnagham_energy",df["energy_Ry"].values, volumes)
-    print("####################")
     
     fit("BM_energy",df["energy_Ry"].values, volumes)
-    print("####################")
-
     fit("vinet_eos",df["energy_Ry"].values, volumes)
 if __name__ == "__main__":
     main()
+
