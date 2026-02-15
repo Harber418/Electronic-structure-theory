@@ -14,19 +14,13 @@ def plot_stenstor():
 
     plt.figure()
     plt.scatter(strain_rate,stress11,c="b")
-    plt.title("stress strain graph")
-    plt.xlabel("strain rate")
-    plt.ylabel("stress tensor 11")
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure()
     plt.scatter(strain_rate,stress33,c="purple")
     plt.title("stress strain graph")
     plt.xlabel("strain rate")
-    plt.ylabel("stress tensor 33")
+    plt.ylabel("stress tensor")
     plt.tight_layout()
     plt.show()
+
 
 def equation(x,m,c):
     return m*x +c
@@ -40,33 +34,31 @@ def fit():
     stress11 = data[:,1]
     stress33 = data[:,2]
 
-    p0 = [1,0]
+    p0 = [-1,0]
     popt, _ = curve_fit(equation, strain_rate, stress11, p0=p0,maxfev=100000)
     m,c = popt 
 
     y = equation(strain_rate,m,c)
+    popt2, _ = curve_fit(equation, strain_rate, stress33, p0=p0,maxfev=100000)
+    m2,c2 = popt2 
+
+    y2 = equation(strain_rate,m2,c2)
     plt.figure()
-    plt.scatter(strain_rate,stress11,c="b",s=2)
-    plt.plot(strain_rate,y,c="r",)
-    plt.title(f"stress strain graph. derivative = {m}")
+    plt.scatter(strain_rate,stress11,c="b",s=2,lable="stress11")
+    plt.plot(strain_rate,y,c="r",label=f"fit stress11. derivative = {m}")
+    plt.scatter(strain_rate,stress33,c="purple",s=2,label="stress33")
+    plt.plot(strain_rate,y2,c="orange",label=f"fit stress33. derivative = {m2}")
+    plt.title(f"stress strain graph.")
     plt.xlabel("strain rate")
-    plt.ylabel("stress tensor 11")
-    plt.tight_layout()
-    plt.show()
-
-
-    popt, _ = curve_fit(equation, strain_rate, stress33, p0=p0,maxfev=100000)
-    m,c = popt 
-
-    y = equation(strain_rate,m,c)
-    plt.figure()
-    plt.scatter(strain_rate,stress33,c="purple",s=2)
-    plt.plot(strain_rate,y,c="r")
-    plt.title(f"stress strain graph. derivative = {m}")
-    plt.xlabel("strain rate")
-    plt.ylabel("stress tensor 33")
+    plt.ylabel("stress tensor")
     plt.tight_layout()
     plt.show()
 
 
 
+def main():
+    plot_stenstor()
+    fit()
+
+if __name__ == "__main__":
+    main()
