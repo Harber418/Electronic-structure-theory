@@ -38,8 +38,8 @@ def fit():
     #ratio of lengths c/a = 1 +-1% where the length originally was 10.3335bhor 
     strain_rate = (data[:,0]*0.0001*10.3335 - 10.3335)/10.3335
     #units of Ry /bhr^3
-    stress11 = data[:,1]*(1.60218*10**(-19)*13.60569312)
-    stress33 = data[:,2]*(1.60218*10**(-19)*13.60569312)
+    stress11 = (data[:,1]*(5.29*10**-11)**3)*1.60218*10**(-19)*13.60569312/(10**9 )
+    stress33 = (data[:,2]*(5.29*10**-11)**3)*1.60218*10**(-19)*13.60569312/(10**9 )
     #14710.5
     p0 = [-1,0]
     popt, _ = curve_fit(equation, strain_rate, stress11, p0=p0,maxfev=100000)
