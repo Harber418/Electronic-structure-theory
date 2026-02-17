@@ -119,6 +119,13 @@ def plot_bands():
 
 def main():
     plots()
+    #we need to put Fermi energy of each start 
+    #alpha
+    afe= 10.8
+    #quartz
+    Qfe= 2.5756
+    #beta 
+    Bfe = 5
     plot_bands()
 
 
