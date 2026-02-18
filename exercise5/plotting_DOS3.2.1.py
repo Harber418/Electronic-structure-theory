@@ -98,7 +98,7 @@ def read_bands(filename, EF):
     return k_dist, energies
 
 
-def plot_bands():
+def plot_bandsold():
     #EF = get_fermi_from_scf("quartz.scf.out")
     EF = 2.5756
     print("Fermi energy:", EF)
@@ -116,17 +116,35 @@ def plot_bands():
     plt.title("Quartz Band Structure")
     plt.show()
 
+def plot_bands(filename, EF):
+    #EF = get_fermi_from_scf(scf_out)
+    
+    data = np.loadtxt(filename)
+
+    k = data[:,0]
+    energies = data[:,1:] - EF
+
+    for i in range(energies.shape[1]):
+        plt.plot(k, energies[:,i], color='black')
+
+    plt.axhline(0, linestyle='--')
+    plt.xlabel("k-path")
+    plt.ylabel("Energy (eV)")
+    plt.title("Band Structure")
+    plt.show()
+
 
 def main():
     plots()
     #we need to put Fermi energy of each start 
     #alpha
-    afe= 10.8
+    afe= 7.985
+    filename = "alpha-bands.dat.gru"
     #quartz
-    Qfe= 2.5756
+    Qfe= 5.230
     #beta 
-    Bfe = 5
-    plot_bands()
+    Bfe = 10.812
+    plot_bands(filename,afe)
 
 
 if __name__ == "__main__":
