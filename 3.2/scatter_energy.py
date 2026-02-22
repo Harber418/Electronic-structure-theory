@@ -128,10 +128,7 @@ def fit(equ,energy,volume):
     plt.tight_layout()
     plt.show()
 
-
-def main():
-
-    filename = "energies_raw_us.txt"
+def read_volume_energy(filename,volume):
     pattern = r'si_volume_(\d+)\.out'
 
     data = []
@@ -144,7 +141,7 @@ def main():
                 radius = int(m1.group(1)) * 0.01
                 energy = float(m2.group(1))
                 data.append([radius, energy])
-    volume = "volume_raw_us.txt"
+    #volume = "volume_raw_us.txt"
     patternv = r'=\s*(-?\d+\.\d+)'
     volumes = []
     with open(volume) as f:
@@ -162,24 +159,32 @@ def main():
     #turn to angstroms
     df["a_A"] = df["a"] * 0.529177
     df["volume_A"] = (df["a_A"] **3)
+    
+
+    return volumes, df["energy_Ry"]
+
+def main():
+
+    v,e = read_volume_energy("energies_raw_us.txt","volume_data.alpha.txt")
 
     #turn energy to j 
     #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
 
 
     plt.figure()
-    plt.scatter(volumes, df["energy_Ry"], s=25)
+    plt.scatter(v, e, s=25)
     plt.xlabel("Volume (Å³)")
     plt.ylabel("Total energy (Ry)")
     plt.tight_layout()
     plt.show()
     #fit options 
-    fit("murnagham_energy",df["energy_Ry"].values, volumes)
-    print("####################")
+    #fit("murnagham_energy",df["energy_Ry"].values, volumes)
+    #print("####################")
     
-    fit("BM_energy",df["energy_Ry"].values, volumes)
-    print("####################")
+    #fit("BM_energy",df["energy_Ry"].values, volumes)
+    #print("####################")
 
-    fit("vinet_eos",df["energy_Ry"].values, volumes)
+    fit("vinet_eos",e, v)
+
 if __name__ == "__main__":
     main()
