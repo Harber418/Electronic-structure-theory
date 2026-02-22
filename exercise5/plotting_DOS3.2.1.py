@@ -103,7 +103,7 @@ def plot_bandsold():
     EF = 2.5756
     print("Fermi energy:", EF)
 
-    k_dist, energies = read_bands("quartz-bands.dat", EF)
+    k_dist, energies = read_bands("beta-bands.dat.gnu", EF)
 
     plt.figure()
 
@@ -122,12 +122,12 @@ def plot_bands(filename, EF):
     data = np.loadtxt(filename)
 
     k = data[:,0]
-    energies = data[:,1:] - EF
+    energies = data[:,1:] 
 
     for i in range(energies.shape[1]):
         plt.plot(k, energies[:,i], color='black')
 
-    plt.axhline(0, linestyle='--')
+    plt.axhline(EF, linestyle='--')
     plt.xlabel("k-path")
     plt.ylabel("Energy (eV)")
     plt.title("Band Structure")
@@ -139,7 +139,7 @@ def main():
     #we need to put Fermi energy of each start 
     #alpha
     afe= 7.985
-    filename = "alpha-bands.dat.gru"
+    filename = "beta-bands.dat.gru"
     #quartz
     Qfe= 5.230
     #beta 
