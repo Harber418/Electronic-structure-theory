@@ -128,6 +128,7 @@ def fit(equ,energy,volume):
     plt.tight_layout()
     plt.show()
 
+    return vfit ,efit,popt
 
 def read_volume_energy(energy_file, volume_file):
     energies = []
@@ -150,28 +151,55 @@ def read_volume_energy(energy_file, volume_file):
     volumes = np.array(volumes)
     return volumes, energies
 
-def main():
-
-    v,e = read_volume_energy("energies_raw_us.txt","volume_data.alpha.txt")
-
-    #turn energy to j 
-    #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
-
-
+def scatter(v,e):
     plt.figure()
     plt.scatter(v, e, s=25)
     plt.xlabel("Volume (Å³)")
     plt.ylabel("Total energy (Ry)")
     plt.tight_layout()
     plt.show()
-    #fit options 
-    #fit("murnagham_energy",df["energy_Ry"].values, volumes)
-    #print("####################")
-    
-    #fit("BM_energy",df["energy_Ry"].values, volumes)
-    #print("####################")
 
-    fit("vinet_eos",e, v)
+def all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb ):
+    #we all live in a yellow submarine 
+    E0 = np.min(efita)
+    index = np.argmin(efita)
+    Va = vfita[index]
+
+    E0B = np.min(efitb)
+    index = np.argmin(efitb)
+    Vb = vfitb[index]
+    plt.figure()
+    plt.scatter(v, e, s=25,c="b")
+    plt.scatter(Bv, Be, s=25,c="r")
+    plt.plot(vfita,efita,label="alpha",c='purple')
+    plt.plot(vfitb,efitb,label="beta",c="indego")
+    plt.plot([Va,Vb],[E0,E0B],label ="cotangent",c='black')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+def main():
+
+
+    #this is for alpha 
+    v,e = read_volume_energy("energies_raw_us.txt","volume_data.alpha.txt")
+    #but now for beta
+    Bv ,Be = read_volume_energy("energies_raw_beta.txt","volume_data.beta.txt")
+    #turn energy to j 
+    #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
+
+
+    scatter(v,e)
+    vfita , efita ,popta =fit("vinet_eos",e, v)
+
+    scatter(Bv,Be)
+    vfitb , efitb ,poptb= fit("vinet_eos",Be,Bv)
+
+    all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb)
+
+
+
+
 
 if __name__ == "__main__":
     main()
