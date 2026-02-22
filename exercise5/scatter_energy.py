@@ -152,7 +152,7 @@ def read_volume_energy(energy_file, volume_file):
 
 def main():
 
-    v,e = read_volume_energy("energies_raw_us.txt","volume_raw_us.txt")
+    v,e = read_volume_energy("energies_raw_us.txt","volume_data.alpha.txt")
 
     #turn energy to j 
     #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
@@ -165,11 +165,11 @@ def main():
     plt.tight_layout()
     plt.show()
     #fit options 
-    fit("murnagham_energy",e, v)
-    print("####################")
+    #fit("murnagham_energy",df["energy_Ry"].values, volumes)
+    #print("####################")
     
-    fit("BM_energy",e, v)
-    print("####################")
+    #fit("BM_energy",df["energy_Ry"].values, volumes)
+    #print("####################")
 
     fit("vinet_eos",e, v)
 
