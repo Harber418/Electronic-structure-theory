@@ -128,40 +128,27 @@ def fit(equ,energy,volume):
     plt.tight_layout()
     plt.show()
 
-def read_volume_energy(filename,volume):
-    pattern = r'si_volume_(\d+)\.out'
 
-    data = []
-
-    with open(filename) as f:
-        for line in f:
-            m1 = re.search(pattern, line)
-            m2 = re.search(r'=\s*(-?\d+\.\d+)', line)
-            if m1 and m2:
-                radius = int(m1.group(1)) * 0.01
-                energy = float(m2.group(1))
-                data.append([radius, energy])
-    #volume = "volume_raw_us.txt"
-    patternv = r'=\s*(-?\d+\.\d+)'
+def read_volume_energy(energy_file, volume_file):
+    energies = []
     volumes = []
-    with open(volume) as f:
+    # Read energies
+    with open(energy_file, "r") as f:
         for line in f:
-            match = re.search(r'unit-cell volume\s*=\s*([-\d.]+)', line)
-            if match:
-                volume1 = float(match.group(1))* (0.529177 ** 3)
-                volumes.append(volume1)
-
-    volumes = np.sort(np.asarray(volumes))
-    df = pd.DataFrame(data, columns=["a", "energy_Ry"])
-    df = df.sort_values("a").reset_index(drop=True)
-
-
-    #turn to angstroms
-    df["a_A"] = df["a"] * 0.529177
-    df["volume_A"] = (df["a_A"] **3)
-    
-
-    return volumes, df["energy_Ry"]
+            if "total energy" in line:
+                parts = line.split()
+                energies.append(float(parts[4]))  # 5th element (index 4)
+    # Read volumes
+    with open(volume_file, "r") as f:
+        for line in f:
+            if "unit-cell volume" in line:
+                parts = line.split()
+                volume_au = float(parts[4])  # 5th element (index 4)
+                volume_angstrom = volume_au * (0.529177 ** 3)
+                volumes.append(volume_angstrom)
+    energies = np.array(energies)
+    volumes = np.array(volumes)
+    return volumes, energies
 
 def main():
 
