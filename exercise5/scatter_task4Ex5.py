@@ -182,7 +182,7 @@ def main():
 
 
     #this is for alpha 
-    v,e = read_volume_energy("energies_raw_us.txt","volume_data.alpha.txt")
+    v,e = read_volume_energy("energies_raw_alpha.txt","volume_data.alpha.txt")
     #but now for beta
     Bv ,Be = read_volume_energy("energies_raw_beta.txt","volume_data.beta.txt")
     #turn energy to j 
@@ -196,6 +196,8 @@ def main():
     vfitb , efitb ,poptb= fit("vinet_eos",Be,Bv)
 
     all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb)
+
+    #I RAN NEW DATA FOR ALPHA BUT I NEED TO GET IT OFF THE SREVER
 
 
 
