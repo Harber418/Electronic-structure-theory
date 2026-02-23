@@ -12,8 +12,8 @@ def plot_stenstor():
     strain_rate = (data[:,0]*0.0001-1.0)/1.0
     #stress is in units Ry /borh ^3
     #should convert to gpa 
-    stress11 = (data[:,1]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
-    stress33 = (data[:,2]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
+    stress11 = -(data[:,1]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
+    stress33 = -(data[:,2]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
     #strain_rate = strain_rate[::-1]
     #stress11 = stress11[::-1]
     #stress33 = stress33[::-1]
@@ -37,11 +37,16 @@ def fit():
     data = np.loadtxt(filename, delimiter=",", skiprows=1)
     #ratio of lengths c/a = 1 +-1% where the length originally was 10.3335bhor 
     strain_rate = (data[:,0]*0.0001*10.3335 - 10.3335)/10.3335
-    #units of Ry /bhr^3
-    stress11 = (data[:,1]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
-    stress33 = (data[:,2]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
+    #units of Ry /bhr^3 
+    stress11 = -(data[:,1]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
+    stress33 = -(data[:,2]/(0.529177249e-10)**3 * 2.1798741e-18 / 1e9)
+    #stress11 = -data[:,1] * 14710.5049
+    #stress33 = -data[:,2] * 14710.5049
     #14710.5
-    p0 = [-1,0]
+    p0 = [1,0]
+    m11, c11 = np.polyfit(strain_rate, stress11, 1)
+    m33, c33 = np.polyfit(strain_rate, stress33, 1)
+
     popt, _ = curve_fit(equation, strain_rate, stress11, p0=p0,maxfev=100000)
     m,c = popt 
 
@@ -53,9 +58,9 @@ def fit():
     y2 = equation(strain_rate,m2,c2)
     plt.figure()
     plt.scatter(strain_rate,stress11,c="b",s=2,label="stress11")
-    plt.plot(strain_rate,y,c="r",label=f"fit stress11. derivative = {m}")
+    plt.plot(strain_rate,y,c="r",label=f"fit stress11. derivative = {m11}")
     plt.scatter(strain_rate,stress33,c="purple",s=2,label="stress33")
-    plt.plot(strain_rate,y2,c="orange",label=f"fit stress33. derivative = {m2}")
+    plt.plot(strain_rate,y2,c="orange",label=f"fit stress33. derivative = {m33}")
     plt.title(f"stress strain graph.")
     plt.xlabel("strain rate")
     plt.ylabel("stress tensor")

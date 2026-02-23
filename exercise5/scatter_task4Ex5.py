@@ -20,7 +20,7 @@ def vinet_eos(v,v0,b0,b0prime,e0):
 
 
 
-def fit(equ,energy,volume):
+def fit(equ,energy,volume,type ="si"):
 
     v = volume
     e = energy
@@ -63,50 +63,70 @@ def fit(equ,energy,volume):
     vfit = np.linspace(v.min(), v.max(), 500)
 
     si_mass = 28.085 * 1.66054*10**(-27) #Kg
+    if type =="si":
+        if equ == "murnagham_energy":
+            efit = murnagham_energy(vfit, v0,b0,b0p,e0)
+            titles="murnagham"
+            vol_per_atom = v0/2
+            print(f"the volume per atom is {vol_per_atom}")
+            density = si_mass/(vol_per_atom*10**(-30))
+            print(f"density is {density} in kg per m^3")
+            B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+            print(f"{B0*10**(-9)} in GPA")
+            sound_velocity = np.sqrt(B0/density)
+            print(f"the sound velocity is {sound_velocity} in m per s ")
+            n = 1 / (vol_per_atom * 1e-30)
+            kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
+            #hbar in units j s 
+            #bolzmann constant in units m^2 kg s^-2 k^-1
+            debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
+            print(f"the debye temperature is {debye_temperature} in kelvin ")
+        elif equ == "BM_energy":
+            efit = BM_energy(vfit, v0,b0,b0p,e0)
+            titles="BM"
+            vol_per_atom = v0/2
+            print(f"the volume per atom is {vol_per_atom}")
+            density = si_mass/(vol_per_atom*10**(-30))
+            print(f"density is {density} in kg per m^3")
+            B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+            print(f"{B0*10**(-9)} in GPA")
+            sound_velocity = np.sqrt(B0/density)
+            print(f"the sound velocity is {sound_velocity} in m per s ")
+            n = 1 / (vol_per_atom * 1e-30)
+            kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
+            #hbar in units j s 
+            #bolzmann constant in units m^2 kg s^-2 k^-1
+            debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
+            print(f"the debye temperature is {debye_temperature} in kelvin ")
+        elif equ == "vinet_eos":
+            titles="vinet"
+            efit = vinet_eos(vfit, v0,b0,b0p,e0)
+            vol_per_atom = v0/2
+            print(f"the volume per atom is {vol_per_atom}")
+            density = si_mass/(vol_per_atom*10**(-30))
+            print(f"density is {density} in kg per m^3")
+            B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+            print(f"{B0*10**(-9)} in GPA")
+            sound_velocity = np.sqrt(B0/density)
+            print(f"the sound velocity is {sound_velocity} in m per s ")
+            n = 1 / (vol_per_atom * 1e-30)
+            kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
+            #hbar in units j s 
+            #bolzmann constant in units m^2 kg s^-2 k^-1
+            debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
+            print(f"the debye temperature is {debye_temperature} in kelvin ")
 
-    if equ == "murnagham_energy":
-        efit = murnagham_energy(vfit, v0,b0,b0p,e0)
-        titles="murnagham"
-        vol_per_atom = v0/2
-        print(f"the volume per atom is {vol_per_atom}")
-        density = si_mass/(vol_per_atom*10**(-30))
-        print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
-        print(f"{B0*10**(-9)} in GPA")
-        sound_velocity = np.sqrt(B0/density)
-        print(f"the sound velocity is {sound_velocity} in m per s ")
-        n = 1 / (vol_per_atom * 1e-30)
-        kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
-        #hbar in units j s 
-        #bolzmann constant in units m^2 kg s^-2 k^-1
-        debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
-        print(f"the debye temperature is {debye_temperature} in kelvin ")
-    elif equ == "BM_energy":
-        efit = BM_energy(vfit, v0,b0,b0p,e0)
-        titles="BM"
-        vol_per_atom = v0/2
-        print(f"the volume per atom is {vol_per_atom}")
-        density = si_mass/(vol_per_atom*10**(-30))
-        print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
-        print(f"{B0*10**(-9)} in GPA")
-        sound_velocity = np.sqrt(B0/density)
-        print(f"the sound velocity is {sound_velocity} in m per s ")
-        n = 1 / (vol_per_atom * 1e-30)
-        kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
-        #hbar in units j s 
-        #bolzmann constant in units m^2 kg s^-2 k^-1
-        debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
-        print(f"the debye temperature is {debye_temperature} in kelvin ")
-    elif equ == "vinet_eos":
+    if type =="alpha":
+        mass = 118.7* 1.66054*10**(-27)
+        #alpha is diamond but has 2 atoms 
         titles="vinet"
         efit = vinet_eos(vfit, v0,b0,b0p,e0)
         vol_per_atom = v0/2
         print(f"the volume per atom is {vol_per_atom}")
-        density = si_mass/(vol_per_atom*10**(-30))
+        density = mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
         B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
-        print(f"{B0*10**(-9)} in GPA")
+        print(f"bulk is {B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
         n = 1 / (vol_per_atom * 1e-30)
@@ -116,7 +136,26 @@ def fit(equ,energy,volume):
         debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
         print(f"the debye temperature is {debye_temperature} in kelvin ")
 
-    #diamnond has 8 atoms per unit cell 
+    else:
+        #beta     
+        mass = 118.7* 1.66054*10**(-27)
+        titles="vinet"
+        efit = vinet_eos(vfit, v0,b0,b0p,e0)
+        vol_per_atom = v0/2
+        print(f"the volume per atom is {vol_per_atom}")
+        density = mass/(vol_per_atom*10**(-30))
+        print(f"density is {density} in kg per m^3")
+        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        print(f"bulk is {B0*10**(-9)} in GPA")
+        sound_velocity = np.sqrt(B0/density)
+        print(f"the sound velocity is {sound_velocity} in m per s ")
+        n = 1 / (vol_per_atom * 1e-30)
+        kD = ((2*np.pi)**3*n*3/(4*np.pi))**(1/3)
+        #hbar in units j s 
+        #bolzmann constant in units m^2 kg s^-2 k^-1
+        debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
+        print(f"the debye temperature is {debye_temperature} in kelvin ")
+
   
 
     plt.figure()
@@ -168,12 +207,16 @@ def all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb ):
     E0B = np.min(efitb)
     index = np.argmin(efitb)
     Vb = vfitb[index]
+    #gradiant 
+    m = np.round((E0-E0B)/(Va-Vb),3)
+
     plt.figure()
     plt.scatter(v, e, s=25,c="b")
     plt.scatter(Bv, Be, s=25,c="r")
     plt.plot(vfita,efita,label="alpha",c='purple')
-    plt.plot(vfitb,efitb,label="beta",c="indego")
-    plt.plot([Va,Vb],[E0,E0B],label ="cotangent",c='black')
+    plt.plot(vfitb,efitb,label="beta",c="g")
+    #plot the common tangent 
+    plt.plot([Va,Vb],[E0,E0B],label =f"cotangent m = {m}",c='black')
     plt.legend()
     plt.tight_layout()
     plt.show()
@@ -190,10 +233,10 @@ def main():
 
 
     scatter(v,e)
-    vfita , efita ,popta =fit("vinet_eos",e, v)
+    vfita , efita ,popta =fit("vinet_eos",e, v,type ="alpha")
 
     scatter(Bv,Be)
-    vfitb , efitb ,poptb= fit("vinet_eos",Be,Bv)
+    vfitb , efitb ,poptb= fit("vinet_eos",Be,Bv,type="beta")
 
     all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb)
 
