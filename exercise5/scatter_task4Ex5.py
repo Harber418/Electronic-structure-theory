@@ -105,7 +105,7 @@ class fitting():
                 debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
                 print(f"the debye temperature is {debye_temperature} in kelvin ")
 
-        if type =="alpha":
+        elif type =="alpha":
             mass = 118.7* 1.66054*10**(-27)
             #alpha is diamond but has 2 atoms 
             titles="vinet"
@@ -187,25 +187,44 @@ class fitting():
         plt.tight_layout()
         plt.show()
 
-    def all_together_now(self,v,e,Bv ,Be,vfita , efita,vfitb , efitb ):
+    def all_together_now(self,v,e,Bv ,Be,vfita , efita,vfitb , efitb ,Va, Vb, P):
         #we all live in a yellow submarine 
         E0 = np.min(efita)
         index = np.argmin(efita)
-        Va = vfita[index]
+        #Va = vfita[index]
 
         E0B = np.min(efitb)
         index = np.argmin(efitb)
-        Vb = vfitb[index]
+        #Vb = vfitb[index]
         #gradiant 
-        m = np.round((E0-E0B)/(Va-Vb),3)
+
+        #line 1
+        # Compute energies at transition volumes
+        Ea = vinet_eos(Va, *self.alpha)
+        Eb = vinet_eos(Vb, *self.beta)
+
+        # Slope = -P
+        slope = -P
+
+        # Create volume range for plotting tangent
+        Vline = np.linspace(min(Va, Vb)-10, max(Va, Vb)+10, 200)
+
+        # Tangent lines
+        tangent_alpha = Ea + slope * (Vline - Va)
+        tangent_beta  = Eb + slope * (Vline - Vb)
+        
+        
 
         plt.figure()
-        plt.scatter(v, e, s=25,c="b")
-        plt.scatter(Bv, Be, s=25,c="r")
-        plt.plot(vfita,efita,label="alpha",c='purple')
-        plt.plot(vfitb,efitb,label="beta",c="g")
+        plt.scatter(v, e, s=25,c="deepskyblue")
+        plt.scatter(Bv, Be, s=25,c="orange")
+        plt.plot(vfita,efita,label="alpha",c='midnightblue')
+        plt.plot(vfitb,efitb,label="beta",c="orangered")
+        plt.plot(Vline, tangent_alpha, 'k--', label="Common Tangent")
+        plt.plot(Vline, tangent_beta, 'k--')
+        
         #plot the common tangent 
-        plt.plot([Va,Vb],[E0,E0B],label =f"cotangent m = {m}",c='black')
+        #plt.plot([Va,Vb],[E0,E0B],label =f"cotangent m = {m}",c='black')
         plt.legend()
         plt.tight_layout()
         plt.show()
@@ -229,13 +248,13 @@ class fitting():
         #at the transition pressure the two phases have equal enthalpy
         # H = E +PV
         # so E + PV = E + PV 
-        #p = Ea - Eb/va-vb
+        #p = -(Ea - Eb)/va-vb
         #additionally
         #gradiants of the tangent at both points must be -P 
         Av,Bv,p = vars
 
         eq1 = self.A_derivative(Av, self.alpha[0],self.alpha[1],self.alpha[2],self.alpha[3]) + p
-        eq2 = self.A_derivative(Bv, self.beta[0],self.beta[1],self.beta[2],self.beta[3]) + p
+        eq2 = self.B_derivative(Bv, self.beta[0],self.beta[1],self.beta[2],self.beta[3]) + p
 
         eq3 = (Ebeta(Bv, self.beta[0],self.beta[1],self.beta[2],self.beta[3]) - Ealpha(Av, self.alpha[0],self.alpha[1],self.alpha[2],self.alpha[3]))/(Bv-Av) + p
         
@@ -280,24 +299,27 @@ def main():
     #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
 
 
-    run.scatter(v,e)
+    #run.scatter(v,e)
     vfita , efita ,popta =run.fit("vinet_eos",e, v,type ="alpha")
     v0, b0, b0p, e0 = popta
     run.alpha = [v0, b0, b0p, e0]
-    run.scatter(Bv,Be)
+    #run.scatter(Bv,Be)
     vfitb , efitb ,poptb= run.fit("vinet_eos",Be,Bv,type="beta")
     v0, b0, b0p, e0 = poptb
     run.beta = [v0, b0, b0p, e0]
-    run.all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb)
+
 
     #I RAN NEW DATA FOR ALPHA BUT I NEED TO GET IT OFF THE SREVER
     Va, Vb, P = run.solve(popta,poptb)
+    run.all_together_now(v,e,Bv ,Be,vfita , efita,vfitb , efitb,Va, Vb, P)
+    print("solving ")
     P_GPa = P * 14710.5
-    print(P_GPa)
-    deltaV = (Vb - Va)/Va * 100
+    print(f"pressure is {P_GPa}")
+    print(Va)
+    deltaV = (Va - Vb)/Va * 100
 
-    print(deltaV)
-
+    print(f" delta v is {deltaV}")
+    
 
 
 
