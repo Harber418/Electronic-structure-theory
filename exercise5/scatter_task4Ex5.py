@@ -222,6 +222,8 @@ class fitting():
         plt.plot(vfitb,efitb,label="beta",c="orangered")
         plt.plot(Vline, tangent_alpha, 'k--', label="Common Tangent")
         plt.plot(Vline, tangent_beta, 'k--')
+        plt.xlabel("Volume (Å³)")
+        plt.ylabel("Total energy (Ry)")
         
         #plot the common tangent 
         #plt.plot([Va,Vb],[E0,E0B],label =f"cotangent m = {m}",c='black')
