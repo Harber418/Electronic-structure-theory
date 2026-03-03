@@ -1,17 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
-colours = ["red", "blue", "green", "orange", "purple", "cyan", "magenta", "brown", "pink", "gray"]
-for i in range(1, 11, 1):
-    data = np.loadtxt(f"si.ph-disp{i}.gp")
 
-    nbands = data.shape[1] - 1
-    color = colours[i - 1]
-    for band in range(nbands):
-        if band == 0:
-            plt.plot(data[:, 0], data[:, band + 1], linewidth=1, alpha=0.5, color=color, label=f"Dispersion {i}")
-        else:
-            plt.plot(data[:, 0], data[:, band + 1], linewidth=1, alpha=0.5, color=color)
-# High symmetry k-points (check matdyn.GaAs.in)
+#####################################################
+#------looking for the sound velocity of silicon 
+#################################################
+
+#we need to find the slope of the acoustic branches near gamma 
+
+#read in the data
+data = np.loadtxt("si.ph-disp.gp")
+#the first 3 bands are all we are interested in 
+nbands = data.shape[1] - 1
+for band in range(1,4,1):
+    plt.plot(data[:, 0], data[:, band + 1], linewidth=1, alpha=0.5, color='k')
+# High symmetry k-points (check matdyn.gaas.in)
+
 plt.axvline(x=data[0, 0], linewidth=0.5, color='k', alpha=0.5)
 plt.axvline(x=data[50, 0], linewidth=0.5, color='k', alpha=0.5)
 plt.axvline(x=data[100, 0], linewidth=0.5, color='k', alpha=0.5)
@@ -23,5 +26,10 @@ plt.xticks(ticks= [0, data[50, 0], data[100, 0], data[150, 0],data[200,0], data[
 plt.ylabel("Frequency (cm$^{-1}$)")
 plt.xlim(data[0, 0], data[-1, 0])
 plt.ylim(0, )
-plt.legend()
 plt.show()
+#  0.000  0.000  0.000  50
+ # 0.500  0.000  0.500  50
+ # 0.500  0.250  0.750  50
+ # 0.375  0.375  0.750  50
+  #0.000  0.000  0.000  50
+  #0.500  0.500  0.500  50
