@@ -3,23 +3,35 @@ import matplotlib.pyplot as plt
 
 c = 2.99792458e10 
 plt.figure()
-for i in range(1,12,1):
-
-    filename = f"si.li{i}.gp"
-    data = np.loadtxt(filename)
-    x = data[:, 0]
-    #turn frequency from THz to per cm 
-    frequency = data[:, 1] *1e-12/ c
-    plt.plot(x, frequency)
-
-
-
+#################### espresso 
 data = np.loadtxt("si.ph-disp.gp")
 
 nbands = data.shape[1] - 1
 for band in range(nbands):
     plt.plot(data[:, 0], data[:, band + 1], linewidth=1, alpha=0.5, color='k')
-# High symmetry k-points (check matdyn.GaAs.in)
+
+########################## lit data
+for i in range(1,11,1):
+
+    filename = f"si.li{i}.gp"
+    lit = np.loadtxt(filename)
+    if i <3:
+        x = lit[:, 0] *data[50,0]
+        #turn frequency from THz to per cm 
+        frequency = lit[:, 1] *1e12/ c
+        plt.scatter(x, frequency, marker="k",colour="r")
+    elif 8> i >3:
+        x = data[100,0] -lit[:, 0]*(data[100,0]-data[50,0])
+
+        #turn frequency from THz to per cm 
+        frequency = lit[:, 1] *1e12/ c
+        plt.scatter(x, frequency, marker="k",colour="r")
+    else:
+        x = data[100,0] + lit[:,0]*(data[-1,0] - data[100,0])
+        #turn frequency from THz to per cm 
+        frequency = lit[:, 1] *1e12/ c
+        plt.scatter(x, frequency, marker="o",colour="r")
+#######################################plotting
 plt.axvline(x=data[0, 0], linewidth=0.5, color='k', alpha=0.5)
 plt.axvline(x=data[50, 0], linewidth=0.5, color='k', alpha=0.5)
 plt.axvline(x=data[100, 0], linewidth=0.5, color='k', alpha=0.5)
