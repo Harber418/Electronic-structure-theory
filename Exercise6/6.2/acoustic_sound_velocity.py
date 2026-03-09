@@ -28,8 +28,12 @@ for band in range(1,4,1):
     #y data is in cm^-1 this is Kayser
     #x data is in reduced coordinates, and needs to be converted to meters 
     #
-    v = slope * 1e4 * 1e-10 / (1.0545718e-34 / 1.66053906660e-27) # convert from cm/s to m/s and from eV to J
+    #v = slope * 1e2 * 1e-10 / (1.0545718e-34 / 1.66053906660e-27) # convert from cm/s to m/s and from eV to J
     #v = slope * 2* np.pi * 2.99*10**10
+
+    c = 2.99792458e10  # cm/s
+
+    v = slope * (c) *0.529177*10.2*1e-10
     print(f"{names[band-1]} sound velocity: {v:.2f} m/s")
 # High symmetry k-points (check matdyn.gaas.in)
 
