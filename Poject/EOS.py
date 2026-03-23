@@ -103,7 +103,6 @@ def main():
     #vhange waht type of ice we measure 
     
     ice = 2
-
     v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
 
     #ice 1 
