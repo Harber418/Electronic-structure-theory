@@ -221,7 +221,7 @@ def main():
     v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
     v1 = v1/molecules[ice1]
     e1 = e1/molecules[ice1]
-    ice2 = 2
+    ice2 = 8
     v2,e2 = run.read_volume_energy(f"energies_ice{ice2}.txt",f"volume_ice{ice2}.txt")
     v2 = v2/molecules[ice2]
     e2 = e2/molecules[ice2]
