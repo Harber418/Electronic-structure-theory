@@ -9,7 +9,7 @@ def vinet_eos(v,v0,b0,b0prime,e0):
     nabla = (v/v0)**(1/3)
     return e0 + (4*b0*v0)/((b0prime-1)**2) + (2*b0*v0)/((b0prime-1)**2)*np.exp((3/2)*(b0prime-1)*(1-nabla))*(3*(b0prime-1)*(1-nabla)-2)
 
-def fit(equ,energy,volume):
+def fit(equ,energy,volume,type):
 
     v = volume
     e = energy
@@ -25,7 +25,7 @@ def fit(equ,energy,volume):
 
     #energy_trial = -19.19270380*13.605693 * 1.60218e-19
     #here is is in Ry
-    trial_energy = -19.19270380
+    trial_energy = -350
     
     #in units of angstrom
     p0 = [
@@ -42,7 +42,7 @@ def fit(equ,energy,volume):
 
     print(f"paramertas for equation {equ}")
     print(f"E0  = {e0:.6f} Ry")
-    print(f"V0  = {v0/2:.4f} Å^3")
+    print(f"V0  = {v0:.4f} Å^3")
     print(f"B0  = {b0:.5f} Ry/Å^3")
     print(f"B0' = {b0p:.4f}")
     vfit = np.linspace(v.min(), v.max(), 500)
@@ -50,12 +50,12 @@ def fit(equ,energy,volume):
     si_mass = 28.085 * 1.66054*10**(-27) #Kg
     titles="vinet"
     efit = vinet_eos(vfit, v0,b0,b0p,e0)
-    vol_per_atom = v0/2
+    vol_per_atom = v0
     print(f"the volume per atom is {vol_per_atom}")
     density = si_mass/(vol_per_atom*10**(-30))
     print(f"density is {density} in kg per m^3")
     B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
-    print(f"{B0*10**(-9)} in GPA")
+    print(f"bulk is {B0*10**(-9)} in GPA")
     sound_velocity = np.sqrt(B0/density)
     print(f"the sound velocity is {sound_velocity} in m per s ")
     n = 1 / (vol_per_atom * 1e-30)
@@ -65,9 +65,12 @@ def fit(equ,energy,volume):
     debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
     print(f"the debye temperature is {debye_temperature} in kelvin ")
 
+    colours = [False,"r","orange",False,False,False,False,False,"gold"]
+    scatter = [False,"b","navy",False,False,False,False,False,"royalblue"]
+    ices = [False,"Vinet : Ice I","Vinet : ice II",False,False,False,False,False,"Vinet : Ice VIII"]
     plt.figure()
-    plt.scatter(volume, energy, s=25, label="DFT")
-    plt.plot(vfit, efit, 'r-', label=f"{titles} fit")
+    plt.scatter(volume, energy, s=25, label="DFT",color = scatter[type])
+    plt.plot(vfit, efit, 'r-', label=f"{ices[type]}",color=colours[type])
     plt.xlabel("Volume (Å³)")
     plt.ylabel("Energy (Ry)")
     plt.legend()
@@ -97,22 +100,34 @@ def read_volume_energy(energy_file, volume_file):
     return volumes, energies
 
 def main():
+    #vhange waht type of ice we measure 
+    
+    ice = 2
 
-    v,e = read_volume_energy("energies_ice1.txt","volume_ice1.txt")
+    v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
 
+    #ice 1 
+    #8 molecules 
+    #ice 2 
+    # 12 molecules 
+    #ice 8 
+    # 8 molecules 
+    molecules =[0,8,12,0,0,0,0,0,8]
+    v = v/molecules[ice]
+    e = e/molecules[ice]
     #turn energy to j 
     #df["energy_J"] = df["energy_Ry"] * 13.605693 * 1.60218e-19
 
 
-    plt.figure()
-    plt.scatter(v, e, s=25)
-    plt.xlabel("Volume (Å³)")
-    plt.ylabel("Total energy (Ry)")
-    plt.tight_layout()
-    plt.show()
+    #plt.figure()
+    #plt.scatter(v, e, s=25)
+    #plt.xlabel("Volume (Å³)")
+    #plt.ylabel("Total energy (Ry)")
+    #plt.tight_layout()
+    #plt.show()
     #fit options 
     
-    fit("vinet_eos",e, v)
+    fit("vinet_eos",e, v,ice)
 
 if __name__ == "__main__":
     main()
