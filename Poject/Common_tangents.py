@@ -9,7 +9,7 @@ class fitting():
         self.ice1 = []
         self.ice2 = []
 
-        self.ice3 = []
+        self.ice8 = []
     def fit(self,equ,energy,volume,type ="si"):
 
         v = volume
@@ -126,7 +126,7 @@ class fitting():
         # Compute energies at transition volumes
         Ea = vinet_eos(Va, *self.ice1)
         Eb = vinet_eos(Vb, *self.ice2)
-        E8 = vinet_eos(V3,*self).ice8
+        E8 = vinet_eos(V3,*self.ice8)
 
         # Slope = -P
         slope = -P
@@ -198,10 +198,29 @@ class fitting():
         
         return [eq1, eq2, eq3]
     
-    def solve(self,popta,poptb):
+    def transition2to8(self, vars):
+        #at the transition pressure the two phases have equal enthalpy
+        # H = E +PV
+        # so E + PV = E + PV 
+        #p = -(Ea - Eb)/va-vb
+        #additionally
+        #gradiants of the tangent at both points must be -P 
+        Av,Bv,p = vars
+
+        eq1 = self.A_derivative(Av, self.ice2[0],self.ice2[1],self.ice2[2],self.ice2[3]) + p
+        eq2 = self.B_derivative(Bv, self.ice8[0],self.ice8[1],self.ice8[2],self.ice8[3]) + p
+
+        eq3 = (Ebeta(Bv, self.ice8[0],self.ice8[1],self.ice8[2],self.ice8[3]) - Ealpha(Av, self.ice2[0],self.ice2[1],self.ice2[2],self.ice2[3]))/(Bv-Av) + p
+        
+        return [eq1, eq2, eq3]
+    
+    def solve(self,popta,poptb,roll):
         initial_guess = [popta[0], poptb[0], 0.0]
         initial_guess = [24,20,-0.01]
-        Va, Vb, P = fsolve(self.transition, initial_guess)
+        if roll:
+            Va, Vb, P = fsolve(self.transition, initial_guess)
+        else:
+            Va, Vb, P = fsolve(self.transition2to8, initial_guess)
         return Va, Vb, P
 
 
@@ -250,18 +269,18 @@ def main():
     #run for ice 8 
     vfit8 , efit8 ,poptice8= run.fit("vinet_eos",e3,v3,type="beta")
     v0, b0, b0p, e0 = poptice8
-    run.ice3 = [v0, b0, b0p, e0]
+    run.ice8 = [v0, b0, b0p, e0]
 
     types =[ice1,ice2,ice3]
     #-------------------------
     #transition for ICE1 to ICE 2 
     #------------------------------
-    Va, Vb, P = run.solve(poptice1,poptice2)
+    Va, Vb, P = run.solve(poptice1,poptice2,True)
 
     #========================
     #now from ice 2 to ice 8 
     #========================
-    V2, V3, p2 = run.solve(poptice2,poptice8)
+    V2, V3, p2 = run.solve(poptice2,poptice8,False)
     #================
     #and plot together 
     #====================
