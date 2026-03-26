@@ -190,7 +190,7 @@ class fitting():
     
     def solve(self,popta,poptb):
         initial_guess = [popta[0], poptb[0], 0.0]
-        initial_guess = [32,23,0.01]
+        initial_guess = [24,20,-0.01]
         Va, Vb, P = fsolve(self.transition, initial_guess)
         return Va, Vb, P
 
@@ -217,7 +217,7 @@ def main():
     # 8 molecules 
     run = fitting()
     molecules =[0,8,12,0,0,0,0,0,8]
-    ice1 = 1
+    ice1 = 2
     v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
     v1 = v1/molecules[ice1]
     e1 = e1/molecules[ice1]
