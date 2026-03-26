@@ -6,9 +6,10 @@ from scipy.optimize import curve_fit
 from scipy.optimize import fsolve
 class fitting():
     def __init__(self):
-        self.beta = []
-        self.alpha = []
-        
+        self.ice1 = []
+        self.ice2 = []
+
+        self.ice3 = []
     def fit(self,equ,energy,volume,type ="si"):
 
         v = volume
@@ -109,7 +110,8 @@ class fitting():
         plt.tight_layout()
         plt.show()
 
-    def all_together_now(self,v,e,Bv ,Be,vfita , efita,vfitb , efitb ,Va, Vb, P,types):
+    def all_together_now(self,v,e,Bv ,Be,v3,e3,vfita , efita,vfitb , efitb ,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types):
+        #v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types
         #we all live in a yellow submarine 
         E0 = np.min(efita)
         index = np.argmin(efita)
@@ -122,19 +124,23 @@ class fitting():
 
         #line 1
         # Compute energies at transition volumes
-        Ea = vinet_eos(Va, *self.alpha)
-        Eb = vinet_eos(Vb, *self.beta)
+        Ea = vinet_eos(Va, *self.ice1)
+        Eb = vinet_eos(Vb, *self.ice2)
+        E8 = vinet_eos(V3,*self).ice8
 
         # Slope = -P
         slope = -P
+        slope2 = -p2
 
         # Create volume range for plotting tangent
         Vline = np.linspace(min(Va, Vb)-5, max(Va, Vb)+5, 200)
+        Vline2 = np.linspace(min(V2, V3)-5, max(V2, V3)+5, 200)
 
         # Tangent lines
         tangent_alpha = Ea + slope * (Vline - Va)
         tangent_beta  = Eb + slope * (Vline - Vb)
         
+        tangent_8 = E8 + slope2 *(Vline2-V3)
         
         colours = [False,"r","orange",False,False,False,False,False,"gold"]
         scatter = [False,"b","navy",False,False,False,False,False,"royalblue"]
@@ -143,10 +149,14 @@ class fitting():
         plt.figure()
         plt.scatter(v, e, s=20,color = scatter[types[0]],alpha=0.7)
         plt.scatter(Bv, Be, s=20,color = scatter[types[1]],alpha=0.7)
+        plt.scatter(v3,e3,s=20,color = scatter[types[2]],alpha=0.7)
         plt.plot(vfita,efita,label=f"{ices[types[0]]}",color=colours[types[0]])
         plt.plot(vfitb,efitb,label=f"{ices[types[1]]}",color=colours[types[1]])
+        plt.plot(vfit8,efit8,label=f"{ices[types[2]]}",color=colours[types[2]])
         plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent",alpha=0.9)
         plt.plot(Vline, tangent_beta, 'k--',color = "k",alpha= 0.9)
+        plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
+
         plt.xlabel("Volume (Å³)")
         plt.tight_layout()
         plt.ylabel("Total energy (Ry)")
@@ -181,10 +191,10 @@ class fitting():
         #gradiants of the tangent at both points must be -P 
         Av,Bv,p = vars
 
-        eq1 = self.A_derivative(Av, self.alpha[0],self.alpha[1],self.alpha[2],self.alpha[3]) + p
-        eq2 = self.B_derivative(Bv, self.beta[0],self.beta[1],self.beta[2],self.beta[3]) + p
+        eq1 = self.A_derivative(Av, self.ice1[0],self.ice1[1],self.ice1[2],self.ice1[3]) + p
+        eq2 = self.B_derivative(Bv, self.ice2[0],self.ice2[1],self.ice2[2],self.ice2[3]) + p
 
-        eq3 = (Ebeta(Bv, self.beta[0],self.beta[1],self.beta[2],self.beta[3]) - Ealpha(Av, self.alpha[0],self.alpha[1],self.alpha[2],self.alpha[3]))/(Bv-Av) + p
+        eq3 = (Ebeta(Bv, self.ice2[0],self.ice2[1],self.ice2[2],self.ice2[3]) - Ealpha(Av, self.ice1[0],self.ice1[1],self.ice1[2],self.ice1[3]))/(Bv-Av) + p
         
         return [eq1, eq2, eq3]
     
@@ -193,7 +203,6 @@ class fitting():
         initial_guess = [24,20,-0.01]
         Va, Vb, P = fsolve(self.transition, initial_guess)
         return Va, Vb, P
-
 
 
 def vinet_eos(v,v0,b0,b0prime,e0):
@@ -217,28 +226,47 @@ def main():
     # 8 molecules 
     run = fitting()
     molecules =[0,8,12,0,0,0,0,0,8]
-    ice1 = 2
+    ice1 = 1
     v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
     v1 = v1/molecules[ice1]
     e1 = e1/molecules[ice1]
-    ice2 = 8
+    ice2 = 2
     v2,e2 = run.read_volume_energy(f"energies_ice{ice2}.txt",f"volume_ice{ice2}.txt")
     v2 = v2/molecules[ice2]
     e2 = e2/molecules[ice2]
 
+    ice3 = 8
+    v3,e3 = run.read_volume_energy(f"energies_ice{ice3}.txt",f"volume_ice{ice3}.txt")
+    v3 = v3/molecules[ice3]
+    e3 = e3/molecules[ice3]
     #run.scatter(v,e)
-    vfita , efita ,popta =run.fit("vinet_eos",e1, v1,type ="alpha")
-    v0, b0, b0p, e0 = popta
-    run.alpha = [v0, b0, b0p, e0]
+    vfita , efita ,poptice1 =run.fit("vinet_eos",e1, v1,type ="alpha")
+    v0, b0, b0p, e0 = poptice1
+    run.ice1 = [v0, b0, b0p, e0]
     #run.scatter(Bv,Be)
-    vfitb , efitb ,poptb= run.fit("vinet_eos",e2,v2,type="beta")
-    v0, b0, b0p, e0 = poptb
-    run.beta = [v0, b0, b0p, e0]
+    vfitb , efitb ,poptice2= run.fit("vinet_eos",e2,v2,type="beta")
+    v0, b0, b0p, e0 = poptice2
+    run.ice2 = [v0, b0, b0p, e0]
+    #run for ice 8 
+    vfit8 , efit8 ,poptice8= run.fit("vinet_eos",e3,v3,type="beta")
+    v0, b0, b0p, e0 = poptice8
+    run.ice3 = [v0, b0, b0p, e0]
 
-    types =[ice1,ice2]
-    #I RAN NEW DATA FOR ALPHA BUT I NEED TO GET IT OFF THE SREVER
-    Va, Vb, P = run.solve(popta,poptb)
-    run.all_together_now(v1,e1,v2 ,e2,vfita , efita,vfitb , efitb,Va, Vb, P,types)
+    types =[ice1,ice2,ice3]
+    #-------------------------
+    #transition for ICE1 to ICE 2 
+    #------------------------------
+    Va, Vb, P = run.solve(poptice1,poptice2)
+
+    #========================
+    #now from ice 2 to ice 8 
+    #========================
+    V2, V3, p2 = run.solve(poptice2,poptice8)
+    #================
+    #and plot together 
+    #====================
+
+    run.all_together_now(v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types)
     print("solving ")
     #P_GPa = P * 14710.5
     P_GPa = P * (13.605) *(1.602e-19)/1e-30/1e9
