@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def read_data():
     #o--o   anlge o--h volume
-    ice1= np.array([2.73726,107.5909,1.05445,1736.0838])
+    ice1= [2.73726,107.5909,1.05445,1736.0838]
     ice1_down = [2.54018,107.5909,0.97853,1387.4413]
     ice1_up = [2.92613,107.5909,1.12721,2120.8200]
     ice2 = [2.76551,99.8624,1.01312,2053.1832]
@@ -16,7 +16,7 @@ def read_data():
     ice8_up =[3.09519,105.5976,1.03540,1232.0148]
     #van 
     ice1_van =[2.75760,106.6896,0.99815]
-    ice1_van_up =[2.94787,06.6896,1.06702]
+    ice1_van_up =[2.94787,106.6896,1.06702]
     ice1_van_down =[2.55905,106.6896,0.92628]
     ice2_van =[2.77777,106.8328,0.99188]
     ice2_van_up =[2.96944,106.8328,1.06032]
@@ -27,32 +27,36 @@ def read_data():
 
     #plot the 0--0 bond length 
     plt.figure()
-    volume = [ice1_down[3],ice1[3],ice1_up[3]]*0.529177 ** 3
-    length = [ice1_down[0],ice1[0],ice1_up[0]]
-    volume2 = [ice2_down[3],ice2[3],ice2_up[3]]*0.529177 ** 3
-    length2 = [ice2_down[0],ice2[0],ice2_up[0]]
-    volume8 = [ice8_down[3],ice8[3],ice8_up[3]]*0.529177 ** 3
-    length8 = [ice8_down[0],ice8[0],ice8_up[0]]
+    #ice 2 has 12 
+    volume = np.array([ice1_down[3], ice1[3], ice1_up[3]]) * 0.529177 ** 3 /8
+    length = np.array([ice1_down[0], ice1[0], ice1_up[0]])
+    volume2 = np.array([ice2_down[3], ice2[3], ice2_up[3]]) * 0.529177 ** 3 /12
+    length2 = np.array([ice2_down[0], ice2[0], ice2_up[0]])
+    volume8 = np.array([ice8_down[3], ice8[3], ice8_up[3]]) * 0.529177 ** 3 /8
+    length8 = np.array([ice8_down[0], ice8[0], ice8_up[0]])
 
     plt.plot(volume,length,color = "red",label="ice1")
     plt.plot(volume2,length2,color = "orange",label="ice2")
     plt.plot(volume8,length8,color = "gold",label="ice8")
+    plt.xlabel("Volume per molecule ($\\mathrm{\\AA}^3$)")
+    plt.ylabel("O--O bond length ($\\mathrm{\\AA}$)")
     plt.legend()
+    plt.tight_layout()
     plt.show()
 
     #plot o--h
     plt.figure()
-    volume = [ice1_down[3],ice1[3],ice1_up[3]]*0.529177 ** 3
-    length = [ice1_down[2],ice1[2],ice1_up[2]]
-    volume2 = [ice2_down[3],ice2[3],ice2_up[3]]*0.529177 ** 3
-    length2 = [ice2_down[2],ice2[2],ice2_up[2]]
-    volume8 = [ice8_down[3],ice8[3],ice8_up[3]]*0.529177 ** 3
-    length8 = [ice8_down[2],ice8[2],ice8_up[2]]
+    length = np.array([ice1_down[2], ice1[2], ice1_up[2]])
+    length2 = np.array([ice2_down[2], ice2[2], ice2_up[2]])
+    length8 = np.array([ice8_down[2], ice8[2], ice8_up[2]])
 
-    plt.plot(volume,length,color = "red",label="ice1")
-    plt.plot(volume2,length2,color = "orange",label="ice2")
-    plt.plot(volume8,length8,color = "gold",label="ice8")
+    plt.plot(volume, length, color="red", label="ice1")
+    plt.plot(volume2, length2, color="orange", label="ice2")
+    plt.plot(volume8, length8, color="gold", label="ice8")
+    plt.xlabel("Volume per molecule ($\\mathrm{\\AA}^3$)")
+    plt.ylabel("O--H bond length ($\\mathrm{\\AA}$)")
     plt.legend()
+    plt.tight_layout()
     plt.show()
 
 
