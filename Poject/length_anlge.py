@@ -35,9 +35,9 @@ def read_data():
     volume8 = np.array([ice8_down[3], ice8[3], ice8_up[3]]) * 0.529177 ** 3 /8
     length8 = np.array([ice8_down[0], ice8[0], ice8_up[0]])
 
-    plt.plot(volume,length,color = "red",label="ice1")
-    plt.plot(volume2,length2,color = "orange",label="ice2")
-    plt.plot(volume8,length8,color = "gold",label="ice8")
+    plt.plot(volume,length,color = "red",label="ice I")
+    plt.plot(volume2,length2,color = "orange",label="ice II")
+    plt.plot(volume8,length8,color = "gold",label="ice VIII")
     plt.xlabel("Volume per molecule ($\\mathrm{\\AA}^3$)")
     plt.ylabel("O--O bond length ($\\mathrm{\\AA}$)")
     plt.legend()
@@ -50,9 +50,9 @@ def read_data():
     length2 = np.array([ice2_down[2], ice2[2], ice2_up[2]])
     length8 = np.array([ice8_down[2], ice8[2], ice8_up[2]])
 
-    plt.plot(volume, length, color="red", label="ice1")
-    plt.plot(volume2, length2, color="orange", label="ice2")
-    plt.plot(volume8, length8, color="gold", label="ice8")
+    plt.plot(volume, length, color="red", label="ice I ")
+    plt.plot(volume2, length2, color="orange", label="ice II")
+    plt.plot(volume8, length8, color="gold", label="ice VIII")
     plt.xlabel("Volume per molecule ($\\mathrm{\\AA}^3$)")
     plt.ylabel("O--H bond length ($\\mathrm{\\AA}$)")
     plt.legend()
