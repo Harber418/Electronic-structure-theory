@@ -3,10 +3,11 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+import scienceplots
 
-plt.rcParams["figure.dpi"] = 150
-plt.rcParams["figure.facecolor"] = "white"
-plt.rcParams["figure.figsize"] = (8, 6)
+plt.style.use('science') # more scientific style for matplotlib
+plt.rcParams['text.usetex'] = False # this avoids an annoying latex installation
+
 
 def vinet_eos(v,v0,b0,b0prime,e0):
     nabla = (v/v0)**(1/3)

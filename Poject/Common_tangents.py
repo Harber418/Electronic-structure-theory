@@ -4,6 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.optimize import fsolve
+import scienceplots
+
+plt.style.use('science') # more scientific style for matplotlib
+plt.rcParams['text.usetex'] = False # this avoids an annoying latex installation
+
+
 class fitting():
     def __init__(self):
         self.ice1 = []

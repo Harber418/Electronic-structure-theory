@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit, fsolve
+import scienceplots
+
+plt.style.use('science') # more scientific style for matplotlib
+plt.rcParams['text.usetex'] = False # this avoids an annoying latex installation
+
+
 
 def vinet_eos(v, v0, b0, b0prime, e0):
     nabla = (v / v0) ** (1 / 3)
