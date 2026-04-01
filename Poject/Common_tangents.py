@@ -119,8 +119,8 @@ class fitting():
         plt.tight_layout()
         plt.show()
 
-    def all_together_now(self,v,e,Bv ,Be,v3,e3,vfita , efita,vfitb , efitb ,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types):
-        #v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types
+    def all_together_now(self, v, e, Bv, Be, v3, e3, vfita, efita, vfitb, efitb, vfit8, efit8,
+                     Va, Vb, P, V2, V3, p2, types, Vone_to8, V8_to_one, p3):       #v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types
         #we all live in a yellow submarine 
         E0 = np.min(efita)
         index = np.argmin(efita)
@@ -144,8 +144,12 @@ class fitting():
         # Create volume range for plotting tangent
         Vline = np.linspace(min(Va, Vb)-5, max(Va, Vb)+5, 200)
         Vline2 = np.linspace(min(V2, V3)-5, max(V2, V3)+5, 200)
-        Vline3 = np.linspace(min(Va, V3)-5, max(V2, V3)+5, 200)
-        # Tangent lines
+        Ea_1to8 = vinet_eos(Vone_to8, *self.ice1)
+        E8_1to8 = vinet_eos(V8_to_one, *self.ice8)
+        slope_1to8 = -p3
+        Vline3 = np.linspace(min(Vone_to8, V8_to_one)-5, max(Vone_to8, V8_to_one)+5, 200)
+        tangent_1to8_alpha = Ea_1to8 + slope_1to8 * (Vline3 - Vone_to8)
+        tangent_1to8_beta  = E8_1to8 + slope_1to8 * (Vline3 - V8_to_one)        # Tangent lines
         tangent_alpha = Ea + slope * (Vline - Va)
         tangent_beta  = Eb + slope * (Vline - Vb)
         
@@ -165,8 +169,8 @@ class fitting():
         plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent",alpha=0.9)
         plt.plot(Vline, tangent_beta, 'k--',color = "k",alpha= 0.9)
         plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
-        plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
-
+        plt.plot(Vline3, tangent_1to8_alpha, 'g--', label="Common Tangent 1↔8", alpha=0.9)
+        plt.plot(Vline3, tangent_1to8_beta, 'g--', alpha=0.9)
         plt.xlabel("Volume (Å³)")
         plt.tight_layout()
         plt.ylabel("Total energy (Ry)")
@@ -248,6 +252,8 @@ class fitting():
         elif roll == "2":
             Va, Vb, P = fsolve(self.transition2to8, initial_guess)
         elif roll == "8":
+            initial_guess = [24,20,-0.01]
+            initial_guess = [popta[0] * 0.98, poptb[0] * 1.02, 0.0]          
             Va, Vb, P = fsolve(self.transition1to8, initial_guess)
         return Va, Vb, P
 
@@ -324,7 +330,12 @@ def main():
 
 
 
-    run.all_together_now(v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types)
+    run.all_together_now(
+        v1, e1, v2, e2, v3, e3,
+        vfita, efita, vfitb, efitb, vfit8, efit8,
+        Va, Vb, P, V2, V3, p2, types,
+        Vone_to8, V8_to_one, p3
+    )
     print("solving ")
     #P_GPa = P * 14710.5
     P_GPa = P * (13.605) *(1.602e-19)/1e-30/1e9
