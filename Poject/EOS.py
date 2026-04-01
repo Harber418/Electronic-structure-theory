@@ -89,9 +89,9 @@ def read_volume_energy(energy_file, volume_file):
     # Read energies
     with open(energy_file, "r") as f:
         for line in f:
-            if "Final energy" in line:
-                parts = line.split()
-                energies.append(float(parts[4]))  # 5th element (index 4)
+            #if "Final energy" in line:
+            parts = line.split()
+            energies.append(float(parts[4]))  # 5th element (index 4)
     # Read volumes
     with open(volume_file, "r") as f:
         for line in f:
@@ -109,7 +109,7 @@ def main():
     #vhange waht type of ice we measure 
     
     ice = 2
-    v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
+    v,e = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
 
     #v0_guess = v[np.argmin(e)]
     #mask = (v > 0.94*v0_guess) & (v < 1.06*v0_guess)
