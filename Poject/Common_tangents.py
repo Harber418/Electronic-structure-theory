@@ -16,31 +16,35 @@ class fitting():
         self.ice2 = []
 
         self.ice8 = []
-    def fit(self,equ,energy,volume,type ="si"):
+    def fit(self,equ,energy,volume,types):
 
         v = volume
         e = energy
-        B0 = 10*10**9 
-        #100GPa
+        
+        if types =="1":
+            trial_v = 30
+            B0 = 10*10**9 
+            trial_energy = -34
+            
+        elif types =="2":
+            trial_v = 30
+            B0 = 10*10**9 
+            trial_energy = -34
+
+        elif types =="8":
+            trial_v = 30
+            B0 = 10*10**9 
+            trial_energy = -34
+
         #now convert to Ry/A^3 from joules per m^3
         #1 10^9 Pa = 10^9 J/m^3
         B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)/2
-        #here we have the energy and volume of our initla sample 
-        #in units of angstroms and Ry
-        trial_v = 20*2
-
-
-        #energy_trial = -19.19270380*13.605693 * 1.60218e-19
-        #here is is in Ry
-        trial_energy = -350
-        
-        #in units of angstrom
         p0 = [
-        trial_v,         # v0
-        B0,                     # b0 ~ Ry/A^3 
-        4.0,                      # b0'
-        trial_energy
-    ]
+            trial_v,         # v0
+            B0,                     # b0 ~ Ry/A^3 
+            6.0,                      # b0'
+            trial_energy
+        ]
         
         popt, _ = curve_fit(vinet_eos, v, e, p0=p0,maxfev=100000)
         
@@ -92,9 +96,9 @@ class fitting():
         # Read energies
         with open(energy_file, "r") as f:
             for line in f:
-                if "total energy" in line:
-                    parts = line.split()
-                    energies.append(float(parts[4]))  # 5th element (index 4)
+                #if "total energy" in line:
+                parts = line.split()
+                energies.append(float(parts[4]))  # 5th element (index 4)
         # Read volumes
         with open(volume_file, "r") as f:
             for line in f:
@@ -140,7 +144,7 @@ class fitting():
         # Create volume range for plotting tangent
         Vline = np.linspace(min(Va, Vb)-5, max(Va, Vb)+5, 200)
         Vline2 = np.linspace(min(V2, V3)-5, max(V2, V3)+5, 200)
-
+        Vline3 = np.linspace(min(Va, V3)-5, max(V2, V3)+5, 200)
         # Tangent lines
         tangent_alpha = Ea + slope * (Vline - Va)
         tangent_beta  = Eb + slope * (Vline - Vb)
@@ -160,6 +164,7 @@ class fitting():
         plt.plot(vfit8,efit8,label=f"{ices[types[2]]}",color=colours[types[2]])
         plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent",alpha=0.9)
         plt.plot(Vline, tangent_beta, 'k--',color = "k",alpha= 0.9)
+        plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
         plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
 
         plt.xlabel("Volume (Å³)")
@@ -219,13 +224,31 @@ class fitting():
         
         return [eq1, eq2, eq3]
     
+    def transition1to8(self, vars):
+        #at the transition pressure the two phases have equal enthalpy
+        # H = E +PV
+        # so E + PV = E + PV 
+        #p = -(Ea - Eb)/va-vb
+        #additionally
+        #gradiants of the tangent at both points must be -P 
+        Av,Bv,p = vars
+
+        eq1 = self.A_derivative(Av, self.ice1[0],self.ice1[1],self.ice1[2],self.ice1[3]) + p
+        eq2 = self.B_derivative(Bv, self.ice8[0],self.ice8[1],self.ice8[2],self.ice8[3]) + p
+
+        eq3 = (Ebeta(Bv, self.ice8[0],self.ice8[1],self.ice8[2],self.ice8[3]) - Ealpha(Av, self.ice1[0],self.ice1[1],self.ice1[2],self.ice1[3]))/(Bv-Av) + p
+        
+        return [eq1, eq2, eq3]
+    
     def solve(self,popta,poptb,roll):
         initial_guess = [popta[0], poptb[0], 0.0]
         initial_guess = [24,20,-0.01]
-        if roll:
+        if roll == "1":
             Va, Vb, P = fsolve(self.transition, initial_guess)
-        else:
+        elif roll == "2":
             Va, Vb, P = fsolve(self.transition2to8, initial_guess)
+        elif roll == "8":
+            Va, Vb, P = fsolve(self.transition1to8, initial_guess)
         return Va, Vb, P
 
 
@@ -252,32 +275,32 @@ def main():
     molecules =[0,8,12,0,0,0,0,0,8]
     ice1 = 1
     v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
-    #v1 = v1/molecules[ice1]
-    #e1 = e1/molecules[ice1]
+    v1 = v1/molecules[ice1]
+    e1 = e1/molecules[ice1]
     ice2 = 2
     v2,e2 = run.read_volume_energy(f"energies_ice{ice2}.txt",f"volume_ice{ice2}.txt")
-    #v2 = v2/molecules[ice2]
-    #e2 = e2/molecules[ice2]
+    v2 = v2/molecules[ice2]
+    e2 = e2/molecules[ice2]
 
     ice3 = 8
     v3,e3 = run.read_volume_energy(f"energies_ice{ice3}.txt",f"volume_ice{ice3}.txt")
-    #v3 = v3/molecules[ice3]
-    #e3 = e3/molecules[ice3]
+    v3 = v3/molecules[ice3]
+    e3 = e3/molecules[ice3]
     #run.scatter(v,e)
     print("we now run ice 1 =========================")
-    vfita , efita ,poptice1 =run.fit("vinet_eos",e1, v1,type ="alpha")
+    vfita , efita ,poptice1 =run.fit("vinet_eos",e1, v1,"1")
     v0, b0, b0p, e0 = poptice1
     run.ice1 = [v0, b0, b0p, e0]
     #run.scatter(Bv,Be)
     print("we now run ice 2 =========================")
 
-    vfitb , efitb ,poptice2= run.fit("vinet_eos",e2,v2,type="beta")
+    vfitb , efitb ,poptice2= run.fit("vinet_eos",e2,v2,"2")
     v0, b0, b0p, e0 = poptice2
     run.ice2 = [v0, b0, b0p, e0]
     #run for ice 8 
     print("we now run ice 8 =========================")
 
-    vfit8 , efit8 ,poptice8= run.fit("vinet_eos",e3,v3,type="beta")
+    vfit8 , efit8 ,poptice8= run.fit("vinet_eos",e3,v3,"8")
     v0, b0, b0p, e0 = poptice8
     run.ice8 = [v0, b0, b0p, e0]
 
@@ -285,21 +308,38 @@ def main():
     #-------------------------
     #transition for ICE1 to ICE 2 
     #------------------------------
-    Va, Vb, P = run.solve(poptice1,poptice2,True)
+    Va, Vb, P = run.solve(poptice1,poptice2,"1")
 
     #========================
     #now from ice 2 to ice 8 
     #========================
-    V2, V3, p2 = run.solve(poptice2,poptice8,False)
+    V2, V3, p2 = run.solve(poptice2,poptice8,"2")
+    #========================
+    #now from ice 1 to ice 8 
+    #========================
+    Vone_to8, V8_to_one, p3 = run.solve(poptice1,poptice8,"8")
     #================
     #and plot together 
     #====================
+
+
 
     run.all_together_now(v1,e1,v2 ,e2,v3,e3,vfita , efita,vfitb , efitb,vfit8 , efit8,Va, Vb, P,V2, V3, p2,types)
     print("solving ")
     #P_GPa = P * 14710.5
     P_GPa = P * (13.605) *(1.602e-19)/1e-30/1e9
+    print("ice 1 to 2 ")
     print(f"transition pressure is {P_GPa}")
+    print("==================================")
+    P_GPa2 = p2 * (13.605) *(1.602e-19)/1e-30/1e9
+    print("ice 2 to 8 ")
+    print(f"transition pressure is {P_GPa2}")
+    print("==================================")
+    P_GPa2 = p3 * (13.605) *(1.602e-19)/1e-30/1e9
+    print("ice 1 to 8 ")
+    print(f"transition pressure is {P_GPa2}")
+
+
     print("va is ")
     print(Va)
     print(Vb)
