@@ -27,11 +27,20 @@ def read_volume_energy(energy_file, volume_file, molecules):
 
 def fit_eos(volumes, energies):
     B0 = 100 * 10 ** 9
-    B0 = B0 * (10 ** (-30)) / (1.60218 * 10 ** (-19) * 13.60569312) / 2
+    B0 = B0 * (10 ** (-30)) / (1.60218 * 10 ** (-19) * 13.60569312) 
     trial_v = np.mean(volumes)
     trial_energy = np.min(energies)
     p0 = [trial_v, B0, 4.0, trial_energy]
     popt, _ = curve_fit(vinet_eos, volumes, energies, p0=p0, maxfev=100000)
+    v0, b0, b0p, e0 = popt
+    print("==============")
+    print(f"paramertas for equation ")
+    print(f"E0  = {e0:.6f} Ry")
+    print(f"V0  = {v0:.4f} Å^3")
+    print(f"B0  = {b0:.5f} Ry/Å^3")
+    print(f"B0' = {b0p:.4f}")
+    B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+    print(f"{B0*10**(-9)} in GPA")
     vfit = np.linspace(volumes.min(), volumes.max(), 500)
     efit = vinet_eos(vfit, *popt)
     return vfit, efit, popt
@@ -92,6 +101,7 @@ def main():
     popts = []
     labels = []
     for i, (e_file, v_file, n_mol, label) in enumerate(phases):
+        print(f"ice {i} 3 normal 3 van ")
         v, e = read_volume_energy(e_file, v_file, n_mol)
         phase_data.append((v, e))
         vfit, efit, popt = fit_eos(v, e)

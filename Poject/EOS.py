@@ -4,10 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+plt.rcParams["figure.dpi"] = 150
+plt.rcParams["figure.facecolor"] = "white"
+plt.rcParams["figure.figsize"] = (8, 6)
 
 def vinet_eos(v,v0,b0,b0prime,e0):
     nabla = (v/v0)**(1/3)
     return e0 + (4*b0*v0)/((b0prime-1)**2) + (2*b0*v0)/((b0prime-1)**2)*np.exp((3/2)*(b0prime-1)*(1-nabla))*(3*(b0prime-1)*(1-nabla)-2)
+
 
 def fit(equ,energy,volume,type):
 
@@ -17,15 +21,15 @@ def fit(equ,energy,volume,type):
     #100GPa
     #now convert to Ry/A^3 from joules per m^3
     #1 10^9 Pa = 10^9 J/m^3
-    B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)/2
+    B0 = B0 * (10**(-30))/(1.60218*10**(-19)*13.60569312)
     #here we have the energy and volume of our initla sample 
     #in units of angstroms and Ry
-    trial_v = 20*2
+    trial_v = 25
 
 
     #energy_trial = -19.19270380*13.605693 * 1.60218e-19
     #here is is in Ry
-    trial_energy = -350
+    trial_energy = -37
     
     #in units of angstrom
     p0 = [
@@ -84,7 +88,7 @@ def read_volume_energy(energy_file, volume_file):
     # Read energies
     with open(energy_file, "r") as f:
         for line in f:
-            if "total energy" in line:
+            if "Final energy" in line:
                 parts = line.split()
                 energies.append(float(parts[4]))  # 5th element (index 4)
     # Read volumes
@@ -97,14 +101,20 @@ def read_volume_energy(energy_file, volume_file):
                 volumes.append(volume_angstrom)
     energies = np.array(energies)
     volumes = np.array(volumes)
+
     return volumes, energies
 
 def main():
     #vhange waht type of ice we measure 
     
-    ice = 1
+    ice = 2
     v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
 
+    #v0_guess = v[np.argmin(e)]
+    #mask = (v > 0.94*v0_guess) & (v < 1.06*v0_guess)
+
+    #v = v[mask]
+    #e = e[mask]
     #ice 1 
     #8 molecules 
     #ice 2 

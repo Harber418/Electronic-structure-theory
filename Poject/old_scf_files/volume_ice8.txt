@@ -18,7 +18,6 @@ iceVIII.1048.out:     unit-cell volume          =    1160.8248 (a.u.)^3
 iceVIII.1051.out:     unit-cell volume          =    1170.8223 (a.u.)^3
 iceVIII.1054.out:     unit-cell volume          =    1180.8770 (a.u.)^3
 iceVIII.1057.out:     unit-cell volume          =    1190.9891 (a.u.)^3
-iceVIII.1060.out:     unit-cell volume          =    1201.1588 (a.u.)^3
 iceVIII.1063.out:     unit-cell volume          =    1211.3862 (a.u.)^3
 iceVIII.1066.out:     unit-cell volume          =    1221.6715 (a.u.)^3
 iceVIII.1069.out:     unit-cell volume          =    1232.0148 (a.u.)^3

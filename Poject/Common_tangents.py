@@ -14,7 +14,7 @@ class fitting():
 
         v = volume
         e = energy
-        B0 = 100*10**9 
+        B0 = 10*10**9 
         #100GPa
         #now convert to Ry/A^3 from joules per m^3
         #1 10^9 Pa = 10^9 J/m^3
@@ -53,11 +53,11 @@ class fitting():
         equ == "vinet_eos"
         titles="vinet"
         efit = vinet_eos(vfit, v0,b0,b0p,e0)
-        vol_per_atom = v0/2
-        print(f"the volume per atom is {vol_per_atom}")
+        vol_per_atom = v0
+        print(f"the volume  is {vol_per_atom} in angstrom cubed ")
         density = si_mass/(vol_per_atom*10**(-30))
         print(f"density is {density} in kg per m^3")
-        B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
+        B0 = b0 * ((1.60218*10**(-19))*13.60569312)/(10**(-30))
         print(f"{B0*10**(-9)} in GPA")
         sound_velocity = np.sqrt(B0/density)
         print(f"the sound velocity is {sound_velocity} in m per s ")
@@ -68,7 +68,6 @@ class fitting():
         debye_temperature = (1.054571817*10**(-34)*sound_velocity*kD)/(1.380649 *10**(-23))
         print(f"the debye temperature is {debye_temperature} in kelvin ")
 
-    
 
         #plt.figure()
         #plt.scatter(volume, energy, s=25, label="DFT")
@@ -247,26 +246,31 @@ def main():
     molecules =[0,8,12,0,0,0,0,0,8]
     ice1 = 1
     v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
-    v1 = v1/molecules[ice1]
-    e1 = e1/molecules[ice1]
+    #v1 = v1/molecules[ice1]
+    #e1 = e1/molecules[ice1]
     ice2 = 2
     v2,e2 = run.read_volume_energy(f"energies_ice{ice2}.txt",f"volume_ice{ice2}.txt")
-    v2 = v2/molecules[ice2]
-    e2 = e2/molecules[ice2]
+    #v2 = v2/molecules[ice2]
+    #e2 = e2/molecules[ice2]
 
     ice3 = 8
     v3,e3 = run.read_volume_energy(f"energies_ice{ice3}.txt",f"volume_ice{ice3}.txt")
-    v3 = v3/molecules[ice3]
-    e3 = e3/molecules[ice3]
+    #v3 = v3/molecules[ice3]
+    #e3 = e3/molecules[ice3]
     #run.scatter(v,e)
+    print("we now run ice 1 =========================")
     vfita , efita ,poptice1 =run.fit("vinet_eos",e1, v1,type ="alpha")
     v0, b0, b0p, e0 = poptice1
     run.ice1 = [v0, b0, b0p, e0]
     #run.scatter(Bv,Be)
+    print("we now run ice 2 =========================")
+
     vfitb , efitb ,poptice2= run.fit("vinet_eos",e2,v2,type="beta")
     v0, b0, b0p, e0 = poptice2
     run.ice2 = [v0, b0, b0p, e0]
     #run for ice 8 
+    print("we now run ice 8 =========================")
+
     vfit8 , efit8 ,poptice8= run.fit("vinet_eos",e3,v3,type="beta")
     v0, b0, b0p, e0 = poptice8
     run.ice8 = [v0, b0, b0p, e0]
