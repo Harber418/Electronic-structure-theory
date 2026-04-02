@@ -74,7 +74,7 @@ def fit(equ,energy,volume,type):
     scatter = [False,"b","navy",False,False,False,False,False,"royalblue"]
     ices = [False,"Vinet : Ice I","Vinet : ice II",False,False,False,False,False,"Vinet : Ice VIII"]
     plt.figure()
-    plt.scatter(volume, energy, s=25, label="DFT",color = scatter[type])
+    plt.scatter(volume, energy, s=25, label="DFT vdW",color = scatter[type])
     plt.plot(vfit, efit, 'r-', label=f"{ices[type]}",color=colours[type])
     plt.xlabel("Volume (Å³)")
     plt.ylabel("Energy (Ry)")
@@ -130,11 +130,12 @@ def joint_fit(equ,energy,volume,van_e,van_v,type):
     vfit = np.linspace(v.min(), v.max(), 500)
 
     si_mass = 28.085 * 1.66054*10**(-27) #Kg
+    water_mass = (1.008*2 + 15.999)* 1.66054*10**(-27) #Kg
     titles="vinet"
     efit = vinet_eos(vfit, v0,b0,b0p,e0)
     vol_per_atom = v0
     print(f"the volume per atom is {vol_per_atom}")
-    density = si_mass/(vol_per_atom*10**(-30))
+    density = water_mass/(vol_per_atom*10**(-30))
     print(f"density is {density} in kg per m^3")
     B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
     print(f"bulk is {B0*10**(-9)} in GPA")
@@ -163,9 +164,9 @@ def joint_fit(equ,energy,volume,van_e,van_v,type):
 
     plt.scatter(van_v, van_e, s=25, label="DFT VDW",color = scatter[type-1])
     plt.plot(Vfit, Efit, 'r-', label=f"{ices[type]} VDW",color=colours[type-1])
-    plt.xlabel("Volume (Å³)")
-    plt.ylabel("Energy (Ry)")
-    plt.legend()
+    plt.xlabel("Volume (Å³)", fontsize=16)
+    plt.ylabel("Energy (Ry)", fontsize=16)
+    plt.legend(fontsize=50)
     plt.tight_layout()
     plt.show()
 
@@ -194,8 +195,10 @@ def read_volume_energy(energy_file, volume_file):
 def main():
     #vhange waht type of ice we measure 
     
-    ice = 1
-    v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
+    ice = 2
+
+
+    v,e = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
     #V,E = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
     #v0_guess = v[np.argmin(e)]
     #mask = (v > 0.94*v0_guess) & (v < 1.06*v0_guess)

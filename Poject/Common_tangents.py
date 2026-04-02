@@ -160,17 +160,17 @@ class fitting():
         ices = [False,"Vinet : Ice I","Vinet : ice II",False,False,False,False,False,"Vinet : Ice VIII"]
         
         plt.figure()
-        plt.scatter(v, e, s=20,color = scatter[types[0]],alpha=0.7)
-        plt.scatter(Bv, Be, s=20,color = scatter[types[1]],alpha=0.7)
-        plt.scatter(v3,e3,s=20,color = scatter[types[2]],alpha=0.7)
+        plt.scatter(v, e, s=15,color = scatter[types[0]],alpha=0.5)
+        plt.scatter(Bv, Be, s=15,color = scatter[types[1]],alpha=0.5)
+        plt.scatter(v3,e3,s=15,color = scatter[types[2]],alpha=0.5)
         plt.plot(vfita,efita,label=f"{ices[types[0]]}",color=colours[types[0]])
         plt.plot(vfitb,efitb,label=f"{ices[types[1]]}",color=colours[types[1]])
         plt.plot(vfit8,efit8,label=f"{ices[types[2]]}",color=colours[types[2]])
-        plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent",alpha=0.9)
+        plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent 1↔2",alpha=0.8)
         plt.plot(Vline, tangent_beta, 'k--',color = "k",alpha= 0.9)
-        plt.plot(Vline2, tangent_8, 'k--', color = "k",label="Common Tangent",alpha=0.9)
-        plt.plot(Vline3, tangent_1to8_alpha, 'g--', label="Common Tangent 1↔8", alpha=0.9)
-        plt.plot(Vline3, tangent_1to8_beta, 'g--', alpha=0.9)
+        plt.plot(Vline2, tangent_8, 'k-.', color = "gray",label="Common Tangent 2↔8",alpha=0.9)
+        plt.plot(Vline3, tangent_1to8_alpha, 'g:', label="Common Tangent 1↔8", alpha=0.9)
+        plt.plot(Vline3, tangent_1to8_beta, 'g:', alpha=0.9)
         plt.xlabel("Volume (Å³)")
         plt.tight_layout()
         plt.ylabel("Total energy (Ry)")
@@ -245,9 +245,9 @@ class fitting():
         return [eq1, eq2, eq3]
     
     def solve(self,popta,poptb,roll):
-        initial_guess = [popta[0], poptb[0], 0.0]
         initial_guess = [24,20,-0.01]
         if roll == "1":
+            initial_guess = [popta[0] * 0.98, poptb[0] * 1.02, 0.0]
             Va, Vb, P = fsolve(self.transition, initial_guess)
         elif roll == "2":
             Va, Vb, P = fsolve(self.transition2to8, initial_guess)
