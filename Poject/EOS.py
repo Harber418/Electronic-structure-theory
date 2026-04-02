@@ -200,7 +200,7 @@ def main():
 
 
 
-    v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
+    v,e = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
     #V,E = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
     #v0_guess = v[np.argmin(e)]
     #mask = (v > 0.94*v0_guess) & (v < 1.06*v0_guess)

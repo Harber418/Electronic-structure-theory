@@ -24,17 +24,17 @@ class fitting():
         if types =="1":
             trial_v = 30
             B0 = 10*10**9 
-            trial_energy = -34
+            trial_energy = -34.5
             
         elif types =="2":
-            trial_v = 30
+            trial_v = 25
             B0 = 10*10**9 
-            trial_energy = -34
+            trial_energy = -34.45
 
         elif types =="8":
-            trial_v = 30
+            trial_v = 18
             B0 = 10*10**9 
-            trial_energy = -34
+            trial_energy = -34.49
 
         #now convert to Ry/A^3 from joules per m^3
         #1 10^9 Pa = 10^9 J/m^3
@@ -163,9 +163,9 @@ class fitting():
         plt.scatter(v, e, s=15,color = scatter[types[0]],alpha=0.5)
         plt.scatter(Bv, Be, s=15,color = scatter[types[1]],alpha=0.5)
         plt.scatter(v3,e3,s=15,color = scatter[types[2]],alpha=0.5)
-        plt.plot(vfita,efita,label=f"{ices[types[0]]}",color=colours[types[0]])
-        plt.plot(vfitb,efitb,label=f"{ices[types[1]]}",color=colours[types[1]])
-        plt.plot(vfit8,efit8,label=f"{ices[types[2]]}",color=colours[types[2]])
+        plt.plot(vfita,efita,label=f"{ices[types[0]]} vdW",color=colours[types[0]])
+        plt.plot(vfitb,efitb,label=f"{ices[types[1]]} vdW",color=colours[types[1]])
+        plt.plot(vfit8,efit8,label=f"{ices[types[2]]} vdW",color=colours[types[2]])
         plt.plot(Vline, tangent_alpha, 'k--', color = "k",label="Common Tangent 1↔2",alpha=0.8)
         plt.plot(Vline, tangent_beta, 'k--',color = "k",alpha= 0.9)
         plt.plot(Vline2, tangent_8, 'k-.', color = "gray",label="Common Tangent 2↔8",alpha=0.9)
@@ -250,6 +250,7 @@ class fitting():
             initial_guess = [popta[0] * 0.98, poptb[0] * 1.02, 0.0]
             Va, Vb, P = fsolve(self.transition, initial_guess)
         elif roll == "2":
+            initial_guess = [popta[0] * 0.98, poptb[0] * 1.02, 0.0]
             Va, Vb, P = fsolve(self.transition2to8, initial_guess)
         elif roll == "8":
             initial_guess = [24,20,-0.01]
@@ -280,16 +281,16 @@ def main():
     run = fitting()
     molecules =[0,8,12,0,0,0,0,0,8]
     ice1 = 1
-    v1,e1 = run.read_volume_energy(f"energies_ice{ice1}.txt",f"volume_ice{ice1}.txt")
+    v1,e1 = run.read_volume_energy(f"energies_ice{ice1}_van.txt",f"volume_ice{ice1}_van.txt")
     v1 = v1/molecules[ice1]
     e1 = e1/molecules[ice1]
     ice2 = 2
-    v2,e2 = run.read_volume_energy(f"energies_ice{ice2}.txt",f"volume_ice{ice2}.txt")
+    v2,e2 = run.read_volume_energy(f"energies_ice{ice2}_van.txt",f"volume_ice{ice2}_van.txt")
     v2 = v2/molecules[ice2]
     e2 = e2/molecules[ice2]
 
     ice3 = 8
-    v3,e3 = run.read_volume_energy(f"energies_ice{ice3}.txt",f"volume_ice{ice3}.txt")
+    v3,e3 = run.read_volume_energy(f"energies_ice{ice3}_van.txt",f"volume_ice{ice3}_van.txt")
     v3 = v3/molecules[ice3]
     e3 = e3/molecules[ice3]
     #run.scatter(v,e)
