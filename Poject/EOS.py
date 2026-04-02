@@ -52,12 +52,12 @@ def fit(equ,energy,volume,type):
     print(f"B0' = {b0p:.4f}")
     vfit = np.linspace(v.min(), v.max(), 500)
 
-    si_mass = 28.085 * 1.66054*10**(-27) #Kg
+    water_mass = (1.008*2 + 15.999)* 1.66054*10**(-27) #Kg
     titles="vinet"
     efit = vinet_eos(vfit, v0,b0,b0p,e0)
     vol_per_atom = v0
     print(f"the volume per atom is {vol_per_atom}")
-    density = si_mass/(vol_per_atom*10**(-30))
+    density = water_mass/(vol_per_atom*10**(-30))
     print(f"density is {density} in kg per m^3")
     B0 = b0 * (1.60218*10**(-19)*13.60569312)/(10**(-30))
     print(f"bulk is {B0*10**(-9)} in GPA")
@@ -195,10 +195,12 @@ def read_volume_energy(energy_file, volume_file):
 def main():
     #vhange waht type of ice we measure 
     
-    ice = 2
+    ice = 1
 
 
-    v,e = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
+
+
+    v,e = read_volume_energy(f"energies_ice{ice}.txt",f"volume_ice{ice}.txt")
     #V,E = read_volume_energy(f"energies_ice{ice}_van.txt",f"volume_ice{ice}_van.txt")
     #v0_guess = v[np.argmin(e)]
     #mask = (v > 0.94*v0_guess) & (v < 1.06*v0_guess)
